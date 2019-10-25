@@ -1,0 +1,4 @@
+(executable
+  (name exec)
+  (libraries lwt lwt.unix lwt_ppx logs.lwt logs.fmt fmt.tty core)
+  (preprocess (pps lwt_ppx)))

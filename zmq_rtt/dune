@@ -1,0 +1,13 @@
+(executable
+ (name zping)
+ (modules zping)
+ (libraries lwt zmq-lwt lwt_ppx core)
+ (preprocess (pps ppx_jane lwt_ppx))
+ )
+ 
+(executable
+ (name zpong)
+ (modules zpong)
+ (libraries lwt zmq-lwt lwt_ppx core)
+ (preprocess (pps ppx_jane lwt_ppx))
+ )

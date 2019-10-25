@@ -1,0 +1,4 @@
+(executable
+  (name bar)
+  (libraries base)
+  )
