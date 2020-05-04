@@ -1,8 +1,5 @@
 open Zmq_lwt
 
-let send socket msg = 
-  Socket.send socket msg
-
 let command = 
   fun () -> 
   let loc = "tcp://0.0.0.0:5001" in
@@ -10,15 +7,20 @@ let command =
   print_endline @@ Printf.sprintf "Binding to %s" loc;
   let ctx = Zmq.Context.create () in
   let sock = 
-    Zmq.Socket.create ctx Zmq.Socket.rep in
+    Zmq.Socket.create ctx Zmq.Socket.router in
+  Zmq.Socket.set_identity sock "pong";
+  Zmq.Socket.set_probe_router sock true;
+  Zmq.Socket.set_router_mandatory sock true;
   let () = Zmq.Socket.bind sock loc in
   let sock = Socket.of_socket sock in
-
   Lwt_main.run @@
-  let t = Sys.time() in
-  let%lwt resp = Socket.recv sock in
-  let resp = Sys.time() -. (Float.of_string resp) in
-  let%lwt () = send sock "pong" in
-  Lwt.return @@ Printf.printf "Received \"ping: %f\" in %f " resp (Sys.time() -. t) 
+  let%lwt resp = Socket.recv_all sock in
+  let addr, resp = match resp with
+  | [addr; resp] -> addr, resp
+  | _ -> assert false
+  in
+  print_endline resp;
+  let%lwt () = Socket.send_all sock [addr;"pong"] in
+  Lwt.return_unit
 
 let () = command ()

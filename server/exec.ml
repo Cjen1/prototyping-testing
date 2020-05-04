@@ -56,16 +56,21 @@ let server' () =
     serve ()
   in serve()
 
+let cat () =
+  let addr = Unix.inet_addr_of_string "127.0.0.1" in
+  print_endline "Spooling up server";
+  Server.start addr 5001 () (fun (read, write) () ->
+    let%lwt recv = read () in
+    print_endline recv;
+    let%lwt () = write recv in
+    print_endline "Sent";
+    Lwt.return_unit
+  )
 
     
 
 
 
 let () = 
-  (*Lwt_engine.set (new Lwt_engine.libev ());*)
-  (*Lwt_main.run @@ super_simple_server ()*)
-  Lwt_main.run @@ server' ()
-  (*
-  Lwt_main.run @@ Serv.start
-    (Unix.inet_addr_of_string "127.0.0.1") 5000 ()
-     *)
+  Lwt_engine.set (new Lwt_engine.libev ());
+  Lwt_main.run @@cat ()
