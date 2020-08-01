@@ -1,0 +1,4 @@
+(executable
+ (name main)
+ (libraries core logs logs.fmt fmt fmt.tty io-page io-page-unix cstruct mirage-block mirage-block-unix)
+ )
