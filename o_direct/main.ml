@@ -64,11 +64,12 @@ let write_advance file =
   | Some ps ->
     L.debug (fun m -> m "%a" pp_file file);
     let sectors_written = Cstruct.len ps.underlying / file.sector_size in
+    let underlying, sector_start = ps.underlying, file.current_sector_start in
     file.current_sector_start <- Int64.(add file.current_sector_start @@ of_int sectors_written);  
     file.current_sector <- None; 
     C.LE.set_uint64 ps.underlying 0 ps.buffer_start;
     L.debug (fun m -> m "Writing...   ");
-    B.write file.dev file.current_sector_start [ps.underlying]
+    B.write file.dev sector_start [underlying]
   | None ->
     Lwt.return_ok ()
 
