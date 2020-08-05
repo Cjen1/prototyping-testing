@@ -1,0 +1,5 @@
+(library
+ (name utils)
+ (libraries cstruct cstruct-lwt lwt lwt.unix )
+ (foreign_stubs (language c) (names dbutils_stubs))
+ )

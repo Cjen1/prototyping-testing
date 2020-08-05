@@ -1,0 +1,4 @@
+(executable
+ (name main)
+ (libraries io-page utils core logs logs.fmt fmt fmt.tty cstruct lwt lwt.unix)
+ )
