@@ -63,3 +63,12 @@ CAMLprim value dbutils_open_direct(value filename, value rw, value trunc, value 
 
   CAMLreturn(Val_int(fd));
 }
+
+CAMLprim value dbutils_fdatasync(value fd)
+{
+  CAMLparam1(fd);
+  int r = fdatasync(Int_val(fd));
+
+  if (r != 0) uerror("fdatasync", fd);
+  CAMLreturn0;
+}
