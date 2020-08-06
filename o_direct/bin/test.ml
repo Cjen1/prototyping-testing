@@ -3,7 +3,7 @@ let main lwt =
   let file = "bench.dat" in
   let size = 512 in
 
-  let fsync = false in
+  let fsync = true in
   let o_direct = false in
 
   let buf = Bytes.create size in
@@ -32,21 +32,21 @@ let main lwt =
       done;
       (Unix.gettimeofday () -. start)
     | true ->
-      let lfd = Lwt_unix.of_unix_file_descr fd in
+      let fd = Lwt_unix.of_unix_file_descr fd in
       let open Lwt.Infix in
       let rec loop = function
         | 0 -> 
           Lwt.return_unit
         | count ->
-          Lwt_unix.write lfd buf 0 size >>= fun written ->
+          Lwt_unix.write fd buf 0 size >>= fun written ->
           assert(written = size);
-          (*
-          if fsync then
-            Unix.fsync fd
-          else
-            Utils.fdatasync fd
-          ;*)
-          Lwt_unix.fdatasync lfd >>= fun () ->
+          (
+            if fsync then
+              Lwt_unix.fsync fd
+            else
+              Lwt_unix.fdatasync fd
+          )
+          >>= fun () ->
           loop (count - 1)
       in 
       let run () =
@@ -56,6 +56,6 @@ let main lwt =
       in
       Lwt_main.run (run ())
   in 
-  Fmt.pr "Took %.2f seconds for %s\n" duration (if lwt then "lwt" else "straight") 
+  Fmt.pr "Took %.6f seconds per write for %s\n" (duration /. Float.of_int count) (if lwt then "lwt" else "straight") 
 
 let () = main false; main true
