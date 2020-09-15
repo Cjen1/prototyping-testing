@@ -1,0 +1,3 @@
+(executables
+ (names bench_cmgr bench_maxout)
+ (libraries core unix_capnp_messaging))
