@@ -1,4 +1,4 @@
-(executable
- (name breaking)
- (libraries lwt lwt.unix)
+(executables
+ (names breaking breaking_async)
+ (libraries lwt lwt.unix async)
  )
