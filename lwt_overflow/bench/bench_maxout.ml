@@ -85,5 +85,6 @@ let reporter =
 let () =
   Logs.(set_level (Some Info));
   Logs.set_reporter reporter;
+  Printexc.record_backtrace true;
   let res = Lwt_main.run @@ throughput 1000000 () in
   print_endline res
