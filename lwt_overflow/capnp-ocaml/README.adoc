@@ -1,4 +1,4 @@
-capnp-ocaml (vendored from github.com/capnproto/capnp-ocaml)
+capnp-ocaml
 ===========
 
 This is an http://ocaml.org[OCaml] code generator plugin for the
