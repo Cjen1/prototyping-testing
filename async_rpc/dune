@@ -1,0 +1,5 @@
+(executables 
+ (names client server)
+ (libraries core async owl fmt fmt.tty yojson)
+ (preprocess (pps ppx_jane ppx_deriving_yojson))
+)
