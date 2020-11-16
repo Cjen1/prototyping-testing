@@ -1,0 +1,5 @@
+(executables 
+ (names bench)
+ (libraries core async owl fmt fmt.tty yojson rpc_parallel)
+ (preprocess (pps ppx_jane ppx_deriving_yojson))
+)
