@@ -1,120 +1,145 @@
-use stateright::actor::{*, register::*};
-use std::borrow::Cow;
-use std::collections::BTreeSet;
-use std::net::{SocketAddrV4, Ipv4Addr};
+use stateright::*;
 
-#[derive(Clone)]
-struct ServerActor;
+#[derive(Clone, Debug, Eq, PartialEq, Hash)]
+enum PathType { Hill, Slide, Death, Blank }
 
-type RequestId = u64;
+#[derive(Clone, Debug, Eq, PartialEq, Hash)]
+enum Location { START, NWO, NO, NNEO, ENEO, EO, SEO, SO, SWO, WO, NWI, NI, NNEI, ENEI, EI, SEI, SI, GOAL}
 
-#[derive(Clone, Debug, Hash, PartialEq)]
-struct ActorState {
-    value: char,
-    delivered: BTreeSet<(Id, RequestId)>,
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
+enum IsUsed {Unused, Used}
+
+type Cards = Vec<IsUsed>;
+fn init_cards() -> Cards {
+    vec![IsUsed::Unused; 6]
 }
 
-impl Actor for ServerActor {
-    type Msg = RegisterMsg<RequestId, char, ()>;
-    type State = ActorState;
-
-    fn on_start(&self, _id: Id, _o: &mut Out<Self>) -> Self::State {
-        ActorState {
-            value: '?',
-            delivered: Default::default(),
-        }
-
-    }
-
-    fn on_msg(&self, _id: Id, state: &mut Cow<Self::State>,
-              src: Id, msg: Self::Msg, o: &mut Out<Self>) {
-        match msg {
-            RegisterMsg::Put(req_id, value) => {
-                if state.delivered.contains(&(src, req_id)) { return }
-
-                let mut state = state.to_mut();
-                state.value = value;
-                state.delivered.insert((src, req_id));
-                o.send(src, RegisterMsg::PutOk(req_id));
-            }
-            RegisterMsg::Get(req_id) => {
-                o.send(src, RegisterMsg::GetOk(req_id, state.value));
-            }
-            _ => {}
-        }
-    }
+#[derive(Clone, Debug, Eq, PartialEq, Hash)]
+struct Puzzle {
+    alive : bool,
+    loc : Location,
+    rem_cards : Cards,
+    rem_rolls : usize,
 }
 
-#[cfg(test)]
-mod test {
-    use super::*;
-    use stateright::{*, semantics::*, semantics::register::*};
-    use ActorModelAction::Deliver;
-    use RegisterMsg::{Get, GetOk, Put, PutOk};
+#[derive(Clone, Debug, Eq, PartialEq)]
+enum PAct {
+    Roll,
+    Putt(usize),
+}
 
-    #[test]
-    fn satisfies_all_properties() {
-        base_model()
-            .actor(RegisterActor::Server(ServerActor))
-            .actor(RegisterActor::Client { put_count: 2, server_count: 1})
-            .checker().spawn_dfs().join()
-            .assert_properties();
-
-        base_model()
-            .actor(RegisterActor::Server(ServerActor))
-            .actor(RegisterActor::Client { put_count:1, server_count: 1})
-            .actor(RegisterActor::Client { put_count:1, server_count: 1})
-            .checker().spawn_dfs().join()
-            .assert_properties();
-    }
-
-    #[test]
-    fn not_linearizable_with_two_servers() {
-        let checker = base_model()
-            .actor(RegisterActor::Server(ServerActor))
-            .actor(RegisterActor::Server(ServerActor))
-            .actor(RegisterActor::Client { put_count: 2, server_count: 2 })
-            .checker().spawn_dfs().join();
-        // checker.assert_properties(); // TRY IT: Uncomment this line, and the test will fail.
-        checker.assert_discovery("linearizable", vec![
-                                 Deliver { src: Id::from(2), dst: Id::from(0), msg: Put(2, 'A') },
-                                 Deliver { src: Id::from(0), dst: Id::from(2), msg: PutOk(2) },
-                                 Deliver { src: Id::from(2), dst: Id::from(1), msg: Put(4, 'Z') },
-                                 Deliver { src: Id::from(1), dst: Id::from(2), msg: PutOk(4) },
-                                 Deliver { src: Id::from(2), dst: Id::from(0), msg: Get(6) },
-                                 Deliver { src: Id::from(0), dst: Id::from(2), msg: GetOk(6, 'A') },
-        ]);
-    }
-    fn base_model()
-        -> ActorModel<
-            RegisterActor<ServerActor>,
-            (),
-            LinearizabilityTester<Id, Register<char>>>
-            {
-                ActorModel::new(
-                    (),
-                    LinearizabilityTester::new(Register('?'))
-                    )
-                    .property(Expectation::Always, "linearizable", |_, state| {
-                        state.history.serialized_history().is_some()
+fn handle_path(state : Puzzle, pt : PathType, length : usize, dst : Location) -> Option<Puzzle> {
+    if state.rem_rolls >= length {
+        Some(Puzzle{
+            alive : state.alive,
+            loc : dst,
+            rem_cards : state.rem_cards,
+            rem_rolls : state.rem_rolls - length,
+        })
+    } else {
+        match pt {
+            PathType::Hill => {
+                Some(Puzzle{
+                    alive : state.alive,
+                    loc : state.loc,
+                    rem_cards : state.rem_cards,
+                    rem_rolls : 0,
+                })
+            },
+            PathType::Slide => {
+                Some(Puzzle{
+                    alive : state.alive,
+                    loc : dst,
+                    rem_cards : state.rem_cards,
+                    rem_rolls : 0,
+                })
+            },
+            PathType::Death => {
+                    Some(Puzzle{
+                        alive : false,
+                        loc : state.loc,
+                        rem_cards : state.rem_cards,
+                        rem_rolls : 0,
                     })
-                .property(Expectation::Sometimes, "get succeeds", |_, state| {
-                    state.network.iter().any(|e| matches!(e.msg, RegisterMsg::GetOk(_, _)))
-                })
-                .property(Expectation::Sometimes, "put succeeds", |_, state| {
-                    state.network.iter().any(|e| matches!(e.msg, RegisterMsg::PutOk(_)))
-                })
-                .record_msg_in(RegisterMsg::record_returns)
-                    .record_msg_out(RegisterMsg::record_invocations)
+            },
+            PathType::Blank => None,
+        }
+    }
+}
+
+impl Model for Puzzle {
+    type State = Puzzle;
+    type Action = PAct;
+
+    fn init_states(&self) -> Vec<Self::State> {
+        vec![Puzzle{alive: true, loc:Location::START, rem_rolls:0, rem_cards:init_cards()}]
+    }
+
+    fn actions(&self, last_state: &Self::State, actions: &mut Vec<Self::Action>) {
+        if last_state.alive {
+            if last_state.rem_rolls != 0 {
+                actions.push(PAct::Roll)
+            } else {
+                for (idx, card) in last_state.rem_cards.iter().enumerate() {
+                    match card {
+                        IsUsed::Used => (),
+                        IsUsed::Unused => {
+                            actions.push(PAct::Putt(idx + 4))
+                        },
+                    }
+                }
             }
+        }
+    }
+
+    fn next_state(&self, last_state:&Self::State, action:Self::Action) -> Option<Self::State> {
+        let last_state = last_state.clone();
+        match action {
+            PAct::Putt(strength) => {
+                let cards = last_state.rem_cards.iter().enumerate().map(
+                    |(idxp, cardp)| if strength - 4 == idxp {IsUsed::Used} else {*cardp}
+                    ).collect();
+                Some(Puzzle{
+                        alive:last_state.alive,
+                        loc:last_state.loc,
+                        rem_cards:cards,
+                        rem_rolls:strength
+                        })
+            },
+            PAct::Roll => {
+                use Location::*;
+                use PathType::*;
+                match last_state.loc {
+                    START => handle_path(last_state, Hill, 4, NWO),
+                    NWO   => handle_path(last_state, Slide, 4, NO),
+                    NO    => handle_path(last_state, Slide, 3, NNEO),
+                    NNEO  => handle_path(last_state, Death, 3, ENEO),
+                    ENEO  => handle_path(last_state, Death, 2, EO),
+                    EO    => handle_path(last_state, Slide, 4, SEO),
+                    SEO   => handle_path(last_state, Hill, 4, SO),
+                    SO    => handle_path(last_state, Slide, 3, SWO),
+                    SWO   => handle_path(last_state, Hill, 3, WO),
+                    WO    => handle_path(last_state, Hill, 3, NWI),
+                    NWI   => handle_path(last_state, Slide, 3, NI),
+                    NI    => handle_path(last_state, Blank, 1, NNEI),
+                    NNEI  => handle_path(last_state, Death, 2, ENEI),
+                    ENEI  => handle_path(last_state, Blank, 1, EI),
+                    EI    => handle_path(last_state, Slide, 2, SEI),
+                    SEI   => handle_path(last_state, Hill, 2, SI),
+                    SI    => handle_path(last_state, Blank, 4, GOAL),
+                    GOAL  => handle_path(last_state, Death, 2, GOAL),
+                }
+            }
+        }
+    }
+
+    fn properties(&self) -> Vec<Property<Self>> {
+        vec![Property::<Self>::sometimes("solved", |_, state| {
+            state.loc == Location::GOAL
+        })]
+    }
 }
 
 fn main() {
-    env_logger::init_from_env(env_logger::Env::default().default_filter_or("info"));
-    spawn(
-        serde_json::to_vec,
-        |bytes| serde_json::from_slice(bytes),
-        vec![
-        (SocketAddrV4::new(Ipv4Addr::LOCALHOST, 3000), ServerActor)
-        ]).unwrap();
+    Puzzle{alive: true, loc:Location::START, rem_rolls:0, rem_cards:init_cards()}.checker().serve("localhost:3000");
 }
