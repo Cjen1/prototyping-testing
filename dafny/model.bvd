@@ -1,0 +1,1257 @@
+*** MODEL
+##_System._tuple#0._#Make0 -> T@U!val!42
+##_System._tuple#2._#Make2 -> T@U!val!39
+##a#2 -> **##a#2
+##a#3 -> **##a#3
+##a#3@0 -> T@U!val!61
+##a#4 -> **##a#4
+##a#5 -> **##a#5
+##a#5@0 -> T@U!val!68
+#_System._tuple#0._#Make0 -> T@U!val!52
+$$Language$Dafny -> true
+$_Frame -> **$_Frame
+$_Frame@0 -> T@U!val!57
+$_reverifyPost -> **$_reverifyPost
+$FunctionContextHeight -> 1
+$Heap@@4 -> T@U!val!54
+$mv_state_const -> 14
+$OneHeap -> T@U!val!47
+$Tick -> **$Tick
+%lbl%@1 -> true
+%lbl%@14 -> true
+%lbl%@2 -> false
+%lbl%+0 -> true
+%lbl%+10 -> true
+%lbl%+12 -> true
+%lbl%+13 -> true
+%lbl%+16 -> true
+%lbl%+18 -> true
+%lbl%+24 -> true
+%lbl%+26 -> true
+%lbl%+27 -> true
+%lbl%+4 -> true
+%lbl%+7 -> true
+a#0@@3 -> T@U!val!61
+alloc -> T@U!val!23
+allocName -> T@U!val!24
+boolType -> T@T!val!2
+BoxType -> T@T!val!10
+charType -> T@T!val!11
+class._module.__default -> T@U!val!44
+class._System.array? -> T@U!val!29
+class._System.bool -> T@U!val!19
+class._System.int -> T@U!val!18
+class._System.multiset -> T@U!val!22
+class._System.object? -> T@U!val!26
+class._System.seq -> T@U!val!21
+class._System.set -> T@U!val!20
+class._System.Tuple0 -> T@U!val!41
+class._System.Tuple2 -> T@U!val!38
+ClassNameType -> T@T!val!6
+DatatypeTypeType -> T@T!val!13
+DtCtorIdType -> T@T!val!9
+HandleTypeType -> T@T!val!16
+i#0 -> **i#0
+i#0@0 -> 3
+intType -> T@T!val!0
+j#3!792!134 -> 1
+j#5 -> **j#5
+j#5@0 -> 3
+k#3!792!133 -> 5
+LayerTypeType -> T@T!val!14
+NameFamilyType -> T@T!val!8
+NoTraitAtAll -> T@U!val!17
+null -> T@U!val!49
+r#0 -> T@U!val!55
+r#0@0 -> T@U!val!60
+realType -> T@T!val!1
+refType -> T@T!val!12
+rmodeType -> T@T!val!3
+TagBool -> T@U!val!5
+TagChar -> T@U!val!6
+TagClass -> T@U!val!16
+Tagclass._module.__default -> T@U!val!45
+Tagclass._System.___hFunc0 -> T@U!val!32
+Tagclass._System.___hFunc1 -> T@U!val!35
+Tagclass._System.___hPartialFunc0 -> T@U!val!33
+Tagclass._System.___hPartialFunc1 -> T@U!val!36
+Tagclass._System.___hTotalFunc0 -> T@U!val!34
+Tagclass._System.___hTotalFunc1 -> T@U!val!37
+Tagclass._System.array -> T@U!val!31
+Tagclass._System.array? -> T@U!val!30
+Tagclass._System.nat -> T@U!val!25
+Tagclass._System.object -> T@U!val!28
+Tagclass._System.object? -> T@U!val!27
+Tagclass._System.Tuple0 -> T@U!val!43
+Tagclass._System.Tuple2 -> T@U!val!40
+TagIMap -> T@U!val!15
+TagInt -> T@U!val!7
+TagISet -> T@U!val!11
+TagMap -> T@U!val!14
+TagMultiSet -> T@U!val!12
+TagORDINAL -> T@U!val!9
+TagReal -> T@U!val!8
+TagSeq -> T@U!val!13
+TagSet -> T@U!val!10
+TBool -> T@U!val!0
+TChar -> T@U!val!1
+Tclass._module.__default -> T@U!val!53
+Tclass._System.nat -> T@U!val!48
+Tclass._System.object -> T@U!val!50
+Tclass._System.object? -> T@U!val!46
+Tclass._System.Tuple0 -> T@U!val!51
+TInt -> T@U!val!2
+TORDINAL -> T@U!val!4
+TReal -> T@U!val!3
+TyTagType -> T@T!val!5
+TyType -> T@T!val!4
+unique-value!100 -> distinct-elems!80!val!18
+unique-value!101 -> distinct-elems!80!val!19
+unique-value!102 -> distinct-elems!80!val!20
+unique-value!103 -> distinct-elems!80!val!21
+unique-value!104 -> distinct-elems!80!val!22
+unique-value!105 -> distinct-elems!80!val!23
+unique-value!106 -> distinct-elems!80!val!24
+unique-value!107 -> distinct-elems!80!val!25
+unique-value!108 -> distinct-elems!80!val!26
+unique-value!109 -> distinct-elems!80!val!27
+unique-value!110 -> distinct-elems!80!val!28
+unique-value!111 -> distinct-elems!80!val!29
+unique-value!112 -> distinct-elems!80!val!30
+unique-value!113 -> distinct-elems!80!val!31
+unique-value!114 -> distinct-elems!80!val!32
+unique-value!115 -> distinct-elems!80!val!33
+unique-value!116 -> distinct-elems!80!val!34
+unique-value!117 -> distinct-elems!80!val!35
+unique-value!118 -> distinct-elems!80!val!36
+unique-value!119 -> distinct-elems!80!val!37
+unique-value!120 -> distinct-elems!80!val!38
+unique-value!121 -> distinct-elems!80!val!39
+unique-value!122 -> distinct-elems!80!val!40
+unique-value!123 -> distinct-elems!80!val!41
+unique-value!124 -> distinct-elems!80!val!42
+unique-value!125 -> distinct-elems!80!val!43
+unique-value!126 -> distinct-elems!80!val!44
+unique-value!127 -> distinct-elems!80!val!45
+unique-value!82 -> distinct-elems!80!val!0
+unique-value!83 -> distinct-elems!80!val!1
+unique-value!84 -> distinct-elems!80!val!2
+unique-value!85 -> distinct-elems!80!val!3
+unique-value!86 -> distinct-elems!80!val!4
+unique-value!87 -> distinct-elems!80!val!5
+unique-value!88 -> distinct-elems!80!val!6
+unique-value!89 -> distinct-elems!80!val!7
+unique-value!90 -> distinct-elems!80!val!8
+unique-value!91 -> distinct-elems!80!val!9
+unique-value!92 -> distinct-elems!80!val!10
+unique-value!93 -> distinct-elems!80!val!11
+unique-value!94 -> distinct-elems!80!val!12
+unique-value!95 -> distinct-elems!80!val!13
+unique-value!96 -> distinct-elems!80!val!14
+unique-value!97 -> distinct-elems!80!val!15
+unique-value!98 -> distinct-elems!80!val!16
+unique-value!99 -> distinct-elems!80!val!17
+v#0 -> 10756
+v#1 -> **v#1
+v#1@0 -> 5035
+$Box -> {
+  10756 -> T@U!val!64
+  10757 -> T@U!val!70
+  5035 -> T@U!val!63
+  else -> T@U!val!64
+}
+$Is -> {
+  10757 T@U!val!2 -> true
+  5035 T@U!val!2 -> true
+  T@U!val!52 T@U!val!51 -> true
+  T@U!val!55 T@U!val!56 -> true
+  T@U!val!61 T@U!val!56 -> true
+  else -> true
+}
+$IsAlloc -> {
+  10757 T@U!val!2 T@U!val!54 -> true
+  5035 T@U!val!2 T@U!val!54 -> true
+  T@U!val!55 T@U!val!56 T@U!val!54 -> true
+  T@U!val!61 T@U!val!56 T@U!val!54 -> true
+  T@U!val!68 T@U!val!56 T@U!val!54 -> true
+  else -> true
+}
+$IsAllocBox -> {
+  T@U!val!63 T@U!val!2 T@U!val!54 -> true
+  T@U!val!70 T@U!val!2 T@U!val!54 -> true
+  else -> true
+}
+$IsBox -> {
+  T@U!val!63 T@U!val!2 -> true
+  T@U!val!70 T@U!val!2 -> true
+  else -> true
+}
+$IsGhostField -> {
+  T@U!val!23 -> false
+  else -> false
+}
+$IsGoodHeap -> {
+  T@U!val!47 -> true
+  T@U!val!54 -> true
+  else -> true
+}
+$IsGoodMultiSet -> {
+  T@U!val!69 -> true
+  else -> true
+}
+$IsHeapAnchor -> {
+  T@U!val!54 -> true
+  else -> true
+}
+$mv_state -> {
+  14 0 -> true
+  14 1 -> true
+  14 2 -> true
+  else -> true
+}
+$Unbox -> {
+  T@T!val!0 T@U!val!63 -> 5035
+  T@T!val!0 T@U!val!64 -> 10756
+  T@T!val!0 T@U!val!70 -> 10757
+  else -> 10756
+}
+_module.__default.sorted -> {
+  T@U!val!60 -> false
+  T@U!val!61 -> true
+  T@U!val!68 -> true
+  else -> true
+}
+_module.__default.sorted#canCall -> {
+  T@U!val!60 -> true
+  T@U!val!61 -> true
+  T@U!val!68 -> true
+  else -> true
+}
+Ctor -> {
+  T@T!val!0 -> 0
+  T@T!val!1 -> 1
+  T@T!val!10 -> 10
+  T@T!val!11 -> 11
+  T@T!val!12 -> 17
+  T@T!val!13 -> 18
+  T@T!val!14 -> 19
+  T@T!val!15 -> 16
+  T@T!val!16 -> 20
+  T@T!val!17 -> 13
+  T@T!val!18 -> 22
+  T@T!val!19 -> 12
+  T@T!val!2 -> 2
+  T@T!val!3 -> 3
+  T@T!val!4 -> 4
+  T@T!val!5 -> 5
+  T@T!val!6 -> 6
+  T@T!val!7 -> 7
+  T@T!val!8 -> 8
+  T@T!val!9 -> 9
+  else -> 0
+}
+DatatypeCtorId -> {
+  T@U!val!52 -> T@U!val!42
+  else -> T@U!val!42
+}
+DeclName -> {
+  T@U!val!23 -> T@U!val!24
+  else -> T@U!val!24
+}
+distinct-aux-f!!81 -> {
+  T@U!val!0 -> distinct-elems!80!val!0
+  T@U!val!1 -> distinct-elems!80!val!1
+  T@U!val!10 -> distinct-elems!80!val!10
+  T@U!val!11 -> distinct-elems!80!val!11
+  T@U!val!12 -> distinct-elems!80!val!12
+  T@U!val!13 -> distinct-elems!80!val!13
+  T@U!val!14 -> distinct-elems!80!val!14
+  T@U!val!15 -> distinct-elems!80!val!15
+  T@U!val!16 -> distinct-elems!80!val!16
+  T@U!val!17 -> distinct-elems!80!val!17
+  T@U!val!18 -> distinct-elems!80!val!18
+  T@U!val!19 -> distinct-elems!80!val!19
+  T@U!val!2 -> distinct-elems!80!val!2
+  T@U!val!20 -> distinct-elems!80!val!20
+  T@U!val!21 -> distinct-elems!80!val!21
+  T@U!val!22 -> distinct-elems!80!val!22
+  T@U!val!23 -> distinct-elems!80!val!23
+  T@U!val!24 -> distinct-elems!80!val!24
+  T@U!val!25 -> distinct-elems!80!val!25
+  T@U!val!26 -> distinct-elems!80!val!26
+  T@U!val!27 -> distinct-elems!80!val!27
+  T@U!val!28 -> distinct-elems!80!val!28
+  T@U!val!29 -> distinct-elems!80!val!29
+  T@U!val!3 -> distinct-elems!80!val!3
+  T@U!val!30 -> distinct-elems!80!val!30
+  T@U!val!31 -> distinct-elems!80!val!31
+  T@U!val!32 -> distinct-elems!80!val!32
+  T@U!val!33 -> distinct-elems!80!val!33
+  T@U!val!34 -> distinct-elems!80!val!34
+  T@U!val!35 -> distinct-elems!80!val!35
+  T@U!val!36 -> distinct-elems!80!val!36
+  T@U!val!37 -> distinct-elems!80!val!37
+  T@U!val!38 -> distinct-elems!80!val!38
+  T@U!val!39 -> distinct-elems!80!val!39
+  T@U!val!4 -> distinct-elems!80!val!4
+  T@U!val!40 -> distinct-elems!80!val!40
+  T@U!val!41 -> distinct-elems!80!val!41
+  T@U!val!42 -> distinct-elems!80!val!42
+  T@U!val!43 -> distinct-elems!80!val!43
+  T@U!val!44 -> distinct-elems!80!val!44
+  T@U!val!45 -> distinct-elems!80!val!45
+  T@U!val!5 -> distinct-elems!80!val!5
+  T@U!val!6 -> distinct-elems!80!val!6
+  T@U!val!7 -> distinct-elems!80!val!7
+  T@U!val!8 -> distinct-elems!80!val!8
+  T@U!val!9 -> distinct-elems!80!val!9
+  else -> distinct-elems!80!val!0
+}
+FDim -> {
+  T@U!val!23 -> 0
+  else -> 0
+}
+FieldType -> {
+  T@T!val!2 -> T@T!val!7
+  else -> T@T!val!7
+}
+FieldTypeInv0 -> {
+  T@T!val!7 -> T@T!val!2
+  else -> T@T!val!2
+}
+i@@14!546!25 -> {
+  T@U!val!63 T@U!val!61 -> 0
+  else -> 0
+}
+i@@16!551!26 -> {
+  T@U!val!63 5 T@U!val!60 -> 0
+  else -> 0
+}
+int_2_U -> {
+  10756 -> 10756
+  10757 -> 10757
+  5035 -> 5035
+  else -> 10756
+}
+Inv0_TSeq -> {
+  T@U!val!56 -> T@U!val!2
+  else -> T@U!val!2
+}
+j#0@@0!776!77 -> {
+  T@U!val!60 -> 2
+  else -> 2
+}
+k#0@@0!776!76 -> {
+  T@U!val!60 -> 5
+  else -> 5
+}
+lambda#3 -> {
+  T@U!val!23 T@U!val!49 T@U!val!54 -> T@U!val!57
+  else -> T@U!val!57
+}
+Lit -> {
+  T@U!val!52 -> T@U!val!52
+  else -> T@U!val!52
+}
+LitInt -> {
+  0 -> 0
+  else -> 0
+}
+MapType0Type -> {
+  T@T!val!10 T@T!val!0 -> T@T!val!19
+  else -> T@T!val!19
+}
+MapType0TypeInv0 -> {
+  T@T!val!19 -> T@T!val!10
+  else -> T@T!val!10
+}
+MapType0TypeInv1 -> {
+  T@T!val!19 -> T@T!val!0
+  else -> T@T!val!0
+}
+MapType1Type -> {
+  T@T!val!12 -> T@T!val!15
+  else -> T@T!val!15
+}
+MapType1TypeInv0 -> {
+  T@T!val!15 -> T@T!val!12
+  else -> T@T!val!12
+}
+MapType3Type -> {
+  T@T!val!12 T@T!val!2 -> T@T!val!18
+  else -> T@T!val!18
+}
+MapType3TypeInv0 -> {
+  T@T!val!18 -> T@T!val!12
+  else -> T@T!val!12
+}
+MapType3TypeInv1 -> {
+  T@T!val!18 -> T@T!val!2
+  else -> T@T!val!2
+}
+MultiSet#Empty -> {
+  T@T!val!10 -> T@U!val!69
+  else -> T@U!val!69
+}
+MultiSet#FromSeq -> {
+  T@U!val!58 -> T@U!val!69
+  else -> T@U!val!69
+}
+Seq#Append -> {
+  T@U!val!61 T@U!val!59 -> T@U!val!60
+  T@U!val!66 T@U!val!67 -> T@U!val!68
+  else -> T@U!val!60
+}
+Seq#Build -> {
+  T@U!val!58 T@U!val!64 -> T@U!val!59
+  else -> T@U!val!59
+}
+Seq#Build_inv0 -> {
+  T@U!val!59 -> T@U!val!58
+  else -> T@U!val!58
+}
+Seq#Build_inv1 -> {
+  T@U!val!59 -> T@U!val!64
+  else -> T@U!val!64
+}
+Seq#Contains -> {
+  T@U!val!61 T@U!val!63 -> true
+  else -> true
+}
+Seq#Drop -> {
+  T@U!val!60 5 -> T@U!val!59
+  T@U!val!61 3 -> T@U!val!67
+  else -> T@U!val!67
+}
+Seq#Empty -> {
+  T@T!val!10 -> T@U!val!58
+  else -> T@U!val!58
+}
+Seq#Equal -> {
+  T@U!val!61 T@U!val!61 -> true
+  else -> true
+}
+Seq#Index -> {
+  T@U!val!59 0 -> T@U!val!64
+  T@U!val!60 0 -> T@U!val!63
+  T@U!val!60 1 -> T@U!val!70
+  T@U!val!60 2 -> T@U!val!70
+  T@U!val!60 5 -> T@U!val!64
+  T@U!val!61 0 -> T@U!val!63
+  T@U!val!61 1 -> T@U!val!70
+  T@U!val!61 2 -> T@U!val!70
+  T@U!val!66 0 -> T@U!val!63
+  T@U!val!66 1 -> T@U!val!70
+  T@U!val!66 2 -> T@U!val!70
+  else -> T@U!val!70
+}
+Seq#Length -> {
+  T@U!val!58 -> 0
+  T@U!val!59 -> 1
+  T@U!val!60 -> 6
+  T@U!val!61 -> 5
+  else -> 6
+}
+Seq#Take -> {
+  T@U!val!60 5 -> T@U!val!61
+  T@U!val!61 3 -> T@U!val!66
+  else -> T@U!val!61
+}
+SeqType -> {
+  T@T!val!10 -> T@T!val!17
+  else -> T@T!val!17
+}
+SeqTypeInv0 -> {
+  T@T!val!17 -> T@T!val!10
+  else -> T@T!val!10
+}
+Tag -> {
+  T@U!val!0 -> T@U!val!5
+  T@U!val!1 -> T@U!val!6
+  T@U!val!2 -> T@U!val!7
+  T@U!val!3 -> T@U!val!8
+  T@U!val!4 -> T@U!val!9
+  T@U!val!46 -> T@U!val!27
+  T@U!val!48 -> T@U!val!25
+  T@U!val!50 -> T@U!val!28
+  T@U!val!51 -> T@U!val!43
+  T@U!val!53 -> T@U!val!45
+  T@U!val!56 -> T@U!val!13
+  else -> T@U!val!5
+}
+tickleBool -> {
+  false -> true
+  true -> true
+  else -> true
+}
+TSeq -> {
+  T@U!val!2 -> T@U!val!56
+  else -> T@U!val!56
+}
+type -> {
+  10756 -> T@T!val!0
+  10757 -> T@T!val!0
+  5035 -> T@T!val!0
+  T@U!val!0 -> T@T!val!4
+  T@U!val!1 -> T@T!val!4
+  T@U!val!10 -> T@T!val!5
+  T@U!val!11 -> T@T!val!5
+  T@U!val!12 -> T@T!val!5
+  T@U!val!13 -> T@T!val!5
+  T@U!val!14 -> T@T!val!5
+  T@U!val!15 -> T@T!val!5
+  T@U!val!16 -> T@T!val!5
+  T@U!val!17 -> T@T!val!6
+  T@U!val!18 -> T@T!val!6
+  T@U!val!19 -> T@T!val!6
+  T@U!val!2 -> T@T!val!4
+  T@U!val!20 -> T@T!val!6
+  T@U!val!21 -> T@T!val!6
+  T@U!val!22 -> T@T!val!6
+  T@U!val!23 -> T@T!val!7
+  T@U!val!24 -> T@T!val!8
+  T@U!val!25 -> T@T!val!5
+  T@U!val!26 -> T@T!val!6
+  T@U!val!27 -> T@T!val!5
+  T@U!val!28 -> T@T!val!5
+  T@U!val!29 -> T@T!val!6
+  T@U!val!3 -> T@T!val!4
+  T@U!val!30 -> T@T!val!5
+  T@U!val!31 -> T@T!val!5
+  T@U!val!32 -> T@T!val!5
+  T@U!val!33 -> T@T!val!5
+  T@U!val!34 -> T@T!val!5
+  T@U!val!35 -> T@T!val!5
+  T@U!val!36 -> T@T!val!5
+  T@U!val!37 -> T@T!val!5
+  T@U!val!38 -> T@T!val!6
+  T@U!val!39 -> T@T!val!9
+  T@U!val!4 -> T@T!val!4
+  T@U!val!40 -> T@T!val!5
+  T@U!val!41 -> T@T!val!6
+  T@U!val!42 -> T@T!val!9
+  T@U!val!43 -> T@T!val!5
+  T@U!val!44 -> T@T!val!6
+  T@U!val!45 -> T@T!val!5
+  T@U!val!46 -> T@T!val!4
+  T@U!val!47 -> T@T!val!15
+  T@U!val!48 -> T@T!val!4
+  T@U!val!49 -> T@T!val!12
+  T@U!val!5 -> T@T!val!5
+  T@U!val!50 -> T@T!val!4
+  T@U!val!51 -> T@T!val!4
+  T@U!val!52 -> T@T!val!13
+  T@U!val!53 -> T@T!val!4
+  T@U!val!54 -> T@T!val!15
+  T@U!val!55 -> T@T!val!17
+  T@U!val!56 -> T@T!val!4
+  T@U!val!57 -> T@T!val!18
+  T@U!val!58 -> T@T!val!17
+  T@U!val!59 -> T@T!val!17
+  T@U!val!6 -> T@T!val!5
+  T@U!val!60 -> T@T!val!17
+  T@U!val!61 -> T@T!val!17
+  T@U!val!63 -> T@T!val!10
+  T@U!val!64 -> T@T!val!10
+  T@U!val!66 -> T@T!val!17
+  T@U!val!67 -> T@T!val!17
+  T@U!val!68 -> T@T!val!17
+  T@U!val!69 -> T@T!val!19
+  T@U!val!7 -> T@T!val!5
+  T@U!val!70 -> T@T!val!10
+  T@U!val!8 -> T@T!val!5
+  T@U!val!9 -> T@T!val!5
+  else -> T@T!val!5
+}
+U_2_int -> {
+  10756 -> 10756
+  10757 -> 10757
+  5035 -> 5035
+  else -> 10756
+}
+*** STATE <initial>
+  ##a#2 -> **##a#2
+  ##a#3 -> **##a#3
+  ##a#4 -> **##a#4
+  ##a#5 -> **##a#5
+  $_Frame -> **$_Frame
+  $_reverifyPost -> **$_reverifyPost
+  $Heap -> T@U!val!54
+  $Tick -> **$Tick
+  a#0 -> T@U!val!61
+  i#0 -> **i#0
+  j#5 -> **j#5
+  r#0 -> T@U!val!55
+  v#0 -> 10756
+  v#1 -> **v#1
+*** END_STATE
+*** STATE d:\Chris\Documents\GitHub\prototyping-testing\dafny\test.dfy(21,0): initial state
+  $_Frame -> T@U!val!57
+*** END_STATE
+*** STATE d:\Chris\Documents\GitHub\prototyping-testing\dafny\test.dfy(22,16)
+  $_reverifyPost -> false
+  r#0 -> T@U!val!60
+*** END_STATE
+*** STATE d:\Chris\Documents\GitHub\prototyping-testing\dafny\test.dfy(27,12)
+  ##a#2 -> T@U!val!61
+  i#0 -> 3
+  j#5 -> 3
+  v#1 -> 5035
+*** END_STATE
+*** END_MODEL
+*** MODEL
+##_System._tuple#0._#Make0 -> T@U!val!42
+##_System._tuple#2._#Make2 -> T@U!val!39
+##a#1_0 -> **##a#1_0
+##a#1_0@0 -> T@U!val!92
+##a#2_0 -> **##a#2_0
+##a#2_0@0 -> T@U!val!70
+##a#3_0 -> **##a#3_0
+##a#3_0@0 -> T@U!val!64
+##a#4_0 -> **##a#4_0
+##a#4_0@0 -> T@U!val!57
+#_System._tuple#0._#Make0 -> T@U!val!52
+$$Language$Dafny -> true
+$_Frame -> **$_Frame
+$_Frame@0 -> T@U!val!87
+$_reverifyPost -> **$_reverifyPost
+$FunctionContextHeight -> 2
+$Heap@@4 -> T@U!val!58
+$Heap@0 -> T@U!val!62
+$Heap@1 -> T@U!val!68
+$Heap@2 -> T@U!val!74
+$Heap@3 -> T@U!val!79
+$mv_state_const -> 14
+$OneHeap -> T@U!val!47
+$rhs##1_0 -> T@U!val!82
+$rhs##2_0 -> T@U!val!83
+$rhs##3_0 -> T@U!val!84
+$rhs##4_0 -> T@U!val!85
+$Tick -> **$Tick
+%lbl%@3 -> true
+%lbl%@5 -> false
+%lbl%+100 -> true
+%lbl%+17 -> true
+%lbl%+19 -> true
+%lbl%+2 -> true
+%lbl%+91 -> true
+%lbl%+93 -> true
+%lbl%+94 -> true
+%lbl%+96 -> true
+%lbl%+97 -> true
+%lbl%+99 -> true
+a##1_0 -> **a##1_0
+a##1_0@0 -> T@U!val!76
+a##2_0 -> **a##2_0
+a##2_0@0 -> T@U!val!71
+a##3_0 -> **a##3_0
+a##4_0 -> **a##4_0
+a#0@@3 -> T@U!val!55
+acc##1_0 -> **acc##1_0
+acc##1_0@0 -> T@U!val!77
+acc##2_0 -> **acc##2_0
+acc##2_0@0 -> T@U!val!72
+acc##3_0 -> **acc##3_0
+acc##3_0@0 -> T@U!val!66
+acc##4_0 -> **acc##4_0
+acc##4_0@0 -> T@U!val!60
+acc#0 -> T@U!val!56
+acc_v#1_0 -> **acc_v#1_0
+acc_v#1_0@0 -> 9297
+alloc -> T@U!val!23
+allocName -> T@U!val!24
+b##1_0 -> **b##1_0
+b##2_0 -> **b##2_0
+b##3_0 -> **b##3_0
+b##3_0@0 -> T@U!val!65
+b##4_0 -> **b##4_0
+b##4_0@0 -> T@U!val!59
+b#0 -> T@U!val!90
+boolType -> T@T!val!2
+BoxType -> T@T!val!10
+call5formal@r#0 -> T@U!val!61
+call5formal@r#0@@0 -> T@U!val!67
+call5formal@r#0@@1 -> T@U!val!73
+call5formal@r#0@@2 -> T@U!val!78
+call5formal@r#0@0 -> T@U!val!63
+call5formal@r#0@0@@0 -> T@U!val!69
+call5formal@r#0@0@@1 -> T@U!val!75
+call5formal@r#0@0@@2 -> T@U!val!80
+charType -> T@T!val!11
+class._module.__default -> T@U!val!44
+class._System.array? -> T@U!val!29
+class._System.bool -> T@U!val!19
+class._System.int -> T@U!val!18
+class._System.multiset -> T@U!val!22
+class._System.object? -> T@U!val!26
+class._System.seq -> T@U!val!21
+class._System.set -> T@U!val!20
+class._System.Tuple0 -> T@U!val!41
+class._System.Tuple2 -> T@U!val!38
+ClassNameType -> T@T!val!6
+DatatypeTypeType -> T@T!val!13
+DtCtorIdType -> T@T!val!9
+HandleTypeType -> T@T!val!16
+intType -> T@T!val!0
+LayerTypeType -> T@T!val!14
+NameFamilyType -> T@T!val!8
+NoTraitAtAll -> T@U!val!17
+null -> T@U!val!49
+r#0 -> T@U!val!81
+r#0@0 -> T@U!val!54
+realType -> T@T!val!1
+refType -> T@T!val!12
+rmodeType -> T@T!val!3
+TagBool -> T@U!val!5
+TagChar -> T@U!val!6
+TagClass -> T@U!val!16
+Tagclass._module.__default -> T@U!val!45
+Tagclass._System.___hFunc0 -> T@U!val!32
+Tagclass._System.___hFunc1 -> T@U!val!35
+Tagclass._System.___hPartialFunc0 -> T@U!val!33
+Tagclass._System.___hPartialFunc1 -> T@U!val!36
+Tagclass._System.___hTotalFunc0 -> T@U!val!34
+Tagclass._System.___hTotalFunc1 -> T@U!val!37
+Tagclass._System.array -> T@U!val!31
+Tagclass._System.array? -> T@U!val!30
+Tagclass._System.nat -> T@U!val!25
+Tagclass._System.object -> T@U!val!28
+Tagclass._System.object? -> T@U!val!27
+Tagclass._System.Tuple0 -> T@U!val!43
+Tagclass._System.Tuple2 -> T@U!val!40
+TagIMap -> T@U!val!15
+TagInt -> T@U!val!7
+TagISet -> T@U!val!11
+TagMap -> T@U!val!14
+TagMultiSet -> T@U!val!12
+TagORDINAL -> T@U!val!9
+TagReal -> T@U!val!8
+TagSeq -> T@U!val!13
+TagSet -> T@U!val!10
+TBool -> T@U!val!0
+TChar -> T@U!val!1
+Tclass._module.__default -> T@U!val!53
+Tclass._System.nat -> T@U!val!48
+Tclass._System.object -> T@U!val!50
+Tclass._System.object? -> T@U!val!46
+Tclass._System.Tuple0 -> T@U!val!51
+TInt -> T@U!val!2
+TORDINAL -> T@U!val!4
+TReal -> T@U!val!3
+TType -> T@T!val!19
+TyTagType -> T@T!val!5
+TyType -> T@T!val!4
+unique-value!100 -> distinct-elems!80!val!18
+unique-value!101 -> distinct-elems!80!val!19
+unique-value!102 -> distinct-elems!80!val!20
+unique-value!103 -> distinct-elems!80!val!21
+unique-value!104 -> distinct-elems!80!val!22
+unique-value!105 -> distinct-elems!80!val!23
+unique-value!106 -> distinct-elems!80!val!24
+unique-value!107 -> distinct-elems!80!val!25
+unique-value!108 -> distinct-elems!80!val!26
+unique-value!109 -> distinct-elems!80!val!27
+unique-value!110 -> distinct-elems!80!val!28
+unique-value!111 -> distinct-elems!80!val!29
+unique-value!112 -> distinct-elems!80!val!30
+unique-value!113 -> distinct-elems!80!val!31
+unique-value!114 -> distinct-elems!80!val!32
+unique-value!115 -> distinct-elems!80!val!33
+unique-value!116 -> distinct-elems!80!val!34
+unique-value!117 -> distinct-elems!80!val!35
+unique-value!118 -> distinct-elems!80!val!36
+unique-value!119 -> distinct-elems!80!val!37
+unique-value!120 -> distinct-elems!80!val!38
+unique-value!121 -> distinct-elems!80!val!39
+unique-value!122 -> distinct-elems!80!val!40
+unique-value!123 -> distinct-elems!80!val!41
+unique-value!124 -> distinct-elems!80!val!42
+unique-value!125 -> distinct-elems!80!val!43
+unique-value!126 -> distinct-elems!80!val!44
+unique-value!127 -> distinct-elems!80!val!45
+unique-value!82 -> distinct-elems!80!val!0
+unique-value!83 -> distinct-elems!80!val!1
+unique-value!84 -> distinct-elems!80!val!2
+unique-value!85 -> distinct-elems!80!val!3
+unique-value!86 -> distinct-elems!80!val!4
+unique-value!87 -> distinct-elems!80!val!5
+unique-value!88 -> distinct-elems!80!val!6
+unique-value!89 -> distinct-elems!80!val!7
+unique-value!90 -> distinct-elems!80!val!8
+unique-value!91 -> distinct-elems!80!val!9
+unique-value!92 -> distinct-elems!80!val!10
+unique-value!93 -> distinct-elems!80!val!11
+unique-value!94 -> distinct-elems!80!val!12
+unique-value!95 -> distinct-elems!80!val!13
+unique-value!96 -> distinct-elems!80!val!14
+unique-value!97 -> distinct-elems!80!val!15
+unique-value!98 -> distinct-elems!80!val!16
+unique-value!99 -> distinct-elems!80!val!17
+vacc#2_0 -> **vacc#2_0
+vacc#3_0 -> **vacc#3_0
+vacc#4_0 -> **vacc#4_0
+$Box -> {
+  10374 -> T@U!val!95
+  9297 -> T@U!val!88
+  else -> T@U!val!88
+}
+$Is -> {
+  10374 T@U!val!2 -> true
+  9297 T@U!val!2 -> true
+  T@U!val!52 T@U!val!51 -> true
+  T@U!val!55 T@U!val!86 -> true
+  T@U!val!56 T@U!val!86 -> true
+  T@U!val!81 T@U!val!86 -> true
+  T@U!val!82 T@U!val!86 -> true
+  T@U!val!83 T@U!val!86 -> true
+  T@U!val!84 T@U!val!86 -> true
+  T@U!val!85 T@U!val!86 -> true
+  T@U!val!90 T@U!val!86 -> true
+  else -> true
+}
+$IsAlloc -> {
+  10374 T@U!val!2 T@U!val!58 -> true
+  9297 T@U!val!2 T@U!val!58 -> true
+  T@U!val!55 T@U!val!86 T@U!val!58 -> true
+  T@U!val!56 T@U!val!86 T@U!val!58 -> true
+  T@U!val!81 T@U!val!86 T@U!val!58 -> true
+  T@U!val!82 T@U!val!86 T@U!val!58 -> true
+  T@U!val!83 T@U!val!86 T@U!val!58 -> true
+  T@U!val!84 T@U!val!86 T@U!val!58 -> true
+  T@U!val!85 T@U!val!86 T@U!val!58 -> true
+  T@U!val!90 T@U!val!86 T@U!val!58 -> true
+  T@U!val!92 T@U!val!86 T@U!val!58 -> true
+  else -> true
+}
+$IsAllocBox -> {
+  T@U!val!88 T@U!val!2 T@U!val!58 -> true
+  T@U!val!95 T@U!val!2 T@U!val!58 -> true
+  else -> true
+}
+$IsBox -> {
+  T@U!val!88 T@U!val!2 -> true
+  T@U!val!95 T@U!val!2 -> true
+  else -> true
+}
+$IsGhostField -> {
+  T@U!val!23 -> false
+  else -> false
+}
+$IsGoodHeap -> {
+  T@U!val!47 -> true
+  T@U!val!58 -> true
+  else -> true
+}
+$IsGoodMultiSet -> {
+  T@U!val!93 -> true
+  else -> true
+}
+$IsHeapAnchor -> {
+  T@U!val!58 -> true
+  else -> true
+}
+$mv_state -> {
+  14 0 -> true
+  else -> true
+}
+$Unbox -> {
+  T@T!val!0 T@U!val!88 -> 9297
+  T@T!val!0 T@U!val!95 -> 10374
+  else -> 9297
+}
+_module.__default.sorted -> {
+  T@U!val!55 -> true
+  T@U!val!56 -> true
+  T@U!val!90 -> true
+  T@U!val!92 -> false
+  else -> true
+}
+_module.__default.sorted#canCall -> {
+  T@U!val!55 -> true
+  T@U!val!56 -> true
+  T@U!val!90 -> true
+  T@U!val!92 -> true
+  else -> true
+}
+Ctor -> {
+  T@T!val!0 -> 0
+  T@T!val!1 -> 1
+  T@T!val!10 -> 10
+  T@T!val!11 -> 11
+  T@T!val!12 -> 17
+  T@T!val!13 -> 18
+  T@T!val!14 -> 19
+  T@T!val!15 -> 16
+  T@T!val!16 -> 20
+  T@T!val!17 -> 13
+  T@T!val!18 -> 22
+  T@T!val!19 -> 23
+  T@T!val!2 -> 2
+  T@T!val!20 -> 12
+  T@T!val!3 -> 3
+  T@T!val!4 -> 4
+  T@T!val!5 -> 5
+  T@T!val!6 -> 6
+  T@T!val!7 -> 7
+  T@T!val!8 -> 8
+  T@T!val!9 -> 9
+  else -> 0
+}
+DatatypeCtorId -> {
+  T@U!val!52 -> T@U!val!42
+  else -> T@U!val!42
+}
+DeclName -> {
+  T@U!val!23 -> T@U!val!24
+  else -> T@U!val!24
+}
+distinct-aux-f!!81 -> {
+  T@U!val!0 -> distinct-elems!80!val!0
+  T@U!val!1 -> distinct-elems!80!val!1
+  T@U!val!10 -> distinct-elems!80!val!10
+  T@U!val!11 -> distinct-elems!80!val!11
+  T@U!val!12 -> distinct-elems!80!val!12
+  T@U!val!13 -> distinct-elems!80!val!13
+  T@U!val!14 -> distinct-elems!80!val!14
+  T@U!val!15 -> distinct-elems!80!val!15
+  T@U!val!16 -> distinct-elems!80!val!16
+  T@U!val!17 -> distinct-elems!80!val!17
+  T@U!val!18 -> distinct-elems!80!val!18
+  T@U!val!19 -> distinct-elems!80!val!19
+  T@U!val!2 -> distinct-elems!80!val!2
+  T@U!val!20 -> distinct-elems!80!val!20
+  T@U!val!21 -> distinct-elems!80!val!21
+  T@U!val!22 -> distinct-elems!80!val!22
+  T@U!val!23 -> distinct-elems!80!val!23
+  T@U!val!24 -> distinct-elems!80!val!24
+  T@U!val!25 -> distinct-elems!80!val!25
+  T@U!val!26 -> distinct-elems!80!val!26
+  T@U!val!27 -> distinct-elems!80!val!27
+  T@U!val!28 -> distinct-elems!80!val!28
+  T@U!val!29 -> distinct-elems!80!val!29
+  T@U!val!3 -> distinct-elems!80!val!3
+  T@U!val!30 -> distinct-elems!80!val!30
+  T@U!val!31 -> distinct-elems!80!val!31
+  T@U!val!32 -> distinct-elems!80!val!32
+  T@U!val!33 -> distinct-elems!80!val!33
+  T@U!val!34 -> distinct-elems!80!val!34
+  T@U!val!35 -> distinct-elems!80!val!35
+  T@U!val!36 -> distinct-elems!80!val!36
+  T@U!val!37 -> distinct-elems!80!val!37
+  T@U!val!38 -> distinct-elems!80!val!38
+  T@U!val!39 -> distinct-elems!80!val!39
+  T@U!val!4 -> distinct-elems!80!val!4
+  T@U!val!40 -> distinct-elems!80!val!40
+  T@U!val!41 -> distinct-elems!80!val!41
+  T@U!val!42 -> distinct-elems!80!val!42
+  T@U!val!43 -> distinct-elems!80!val!43
+  T@U!val!44 -> distinct-elems!80!val!44
+  T@U!val!45 -> distinct-elems!80!val!45
+  T@U!val!5 -> distinct-elems!80!val!5
+  T@U!val!6 -> distinct-elems!80!val!6
+  T@U!val!7 -> distinct-elems!80!val!7
+  T@U!val!8 -> distinct-elems!80!val!8
+  T@U!val!9 -> distinct-elems!80!val!9
+  else -> distinct-elems!80!val!0
+}
+FDim -> {
+  T@U!val!23 -> 0
+  else -> 0
+}
+FieldType -> {
+  T@T!val!2 -> T@T!val!7
+  else -> T@T!val!7
+}
+FieldTypeInv0 -> {
+  T@T!val!7 -> T@T!val!2
+  else -> T@T!val!2
+}
+i@@14!546!25 -> {
+  T@U!val!88 T@U!val!55 -> 0
+  T@U!val!88 T@U!val!56 -> 3805
+  else -> 0
+}
+int_2_U -> {
+  10374 -> 10374
+  9297 -> 9297
+  else -> 9297
+}
+Inv0_TSeq -> {
+  T@U!val!86 -> T@U!val!2
+  else -> T@U!val!2
+}
+j#0@@0!776!77 -> {
+  T@U!val!92 -> 8163
+  else -> 8163
+}
+k#0@@0!776!76 -> {
+  T@U!val!92 -> 8164
+  else -> 8164
+}
+lambda#4 -> {
+  T@U!val!23 T@U!val!49 T@U!val!58 -> T@U!val!87
+  else -> T@U!val!87
+}
+Lit -> {
+  T@U!val!52 -> T@U!val!52
+  else -> T@U!val!52
+}
+LitInt -> {
+  0 -> 0
+  else -> 0
+}
+MapType0Type -> {
+  T@T!val!10 T@T!val!0 -> T@T!val!20
+  else -> T@T!val!20
+}
+MapType0TypeInv0 -> {
+  T@T!val!20 -> T@T!val!10
+  else -> T@T!val!10
+}
+MapType0TypeInv1 -> {
+  T@T!val!20 -> T@T!val!0
+  else -> T@T!val!0
+}
+MapType1Type -> {
+  T@T!val!12 -> T@T!val!15
+  else -> T@T!val!15
+}
+MapType1TypeInv0 -> {
+  T@T!val!15 -> T@T!val!12
+  else -> T@T!val!12
+}
+MapType3Type -> {
+  T@T!val!12 T@T!val!2 -> T@T!val!18
+  else -> T@T!val!18
+}
+MapType3TypeInv0 -> {
+  T@T!val!18 -> T@T!val!12
+  else -> T@T!val!12
+}
+MapType3TypeInv1 -> {
+  T@T!val!18 -> T@T!val!2
+  else -> T@T!val!2
+}
+MultiSet#Empty -> {
+  T@T!val!10 -> T@U!val!93
+  else -> T@U!val!93
+}
+MultiSet#FromSeq -> {
+  T@U!val!90 -> T@U!val!93
+  else -> T@U!val!93
+}
+Seq#Append -> {
+  T@U!val!56 T@U!val!91 -> T@U!val!92
+  else -> T@U!val!92
+}
+Seq#Build -> {
+  T@U!val!90 T@U!val!88 -> T@U!val!91
+  else -> T@U!val!91
+}
+Seq#Build_inv0 -> {
+  T@U!val!91 -> T@U!val!90
+  else -> T@U!val!90
+}
+Seq#Build_inv1 -> {
+  T@U!val!91 -> T@U!val!88
+  else -> T@U!val!88
+}
+Seq#Contains -> {
+  T@U!val!55 T@U!val!88 -> true
+  T@U!val!56 T@U!val!88 -> true
+  else -> true
+}
+Seq#Empty -> {
+  T@T!val!10 -> T@U!val!90
+  else -> T@U!val!90
+}
+Seq#Index -> {
+  T@U!val!55 0 -> T@U!val!88
+  T@U!val!56 3805 -> T@U!val!88
+  T@U!val!56 8163 -> T@U!val!95
+  T@U!val!91 0 -> T@U!val!88
+  T@U!val!92 8163 -> T@U!val!95
+  T@U!val!92 8164 -> T@U!val!88
+  else -> T@U!val!88
+}
+Seq#Length -> {
+  T@U!val!55 -> 1
+  T@U!val!56 -> 8164
+  T@U!val!90 -> 0
+  T@U!val!91 -> 1
+  T@U!val!92 -> 8165
+  else -> 1
+}
+SeqType -> {
+  T@T!val!10 -> T@T!val!17
+  else -> T@T!val!17
+}
+SeqTypeInv0 -> {
+  T@T!val!17 -> T@T!val!10
+  else -> T@T!val!10
+}
+Tag -> {
+  T@U!val!0 -> T@U!val!5
+  T@U!val!1 -> T@U!val!6
+  T@U!val!2 -> T@U!val!7
+  T@U!val!3 -> T@U!val!8
+  T@U!val!4 -> T@U!val!9
+  T@U!val!46 -> T@U!val!27
+  T@U!val!48 -> T@U!val!25
+  T@U!val!50 -> T@U!val!28
+  T@U!val!51 -> T@U!val!43
+  T@U!val!53 -> T@U!val!45
+  T@U!val!86 -> T@U!val!13
+  else -> T@U!val!5
+}
+tickleBool -> {
+  false -> true
+  true -> true
+  else -> true
+}
+TSeq -> {
+  T@U!val!2 -> T@U!val!86
+  else -> T@U!val!86
+}
+type -> {
+  10374 -> T@T!val!0
+  9297 -> T@T!val!0
+  T@U!val!0 -> T@T!val!4
+  T@U!val!1 -> T@T!val!4
+  T@U!val!10 -> T@T!val!5
+  T@U!val!11 -> T@T!val!5
+  T@U!val!12 -> T@T!val!5
+  T@U!val!13 -> T@T!val!5
+  T@U!val!14 -> T@T!val!5
+  T@U!val!15 -> T@T!val!5
+  T@U!val!16 -> T@T!val!5
+  T@U!val!17 -> T@T!val!6
+  T@U!val!18 -> T@T!val!6
+  T@U!val!19 -> T@T!val!6
+  T@U!val!2 -> T@T!val!4
+  T@U!val!20 -> T@T!val!6
+  T@U!val!21 -> T@T!val!6
+  T@U!val!22 -> T@T!val!6
+  T@U!val!23 -> T@T!val!7
+  T@U!val!24 -> T@T!val!8
+  T@U!val!25 -> T@T!val!5
+  T@U!val!26 -> T@T!val!6
+  T@U!val!27 -> T@T!val!5
+  T@U!val!28 -> T@T!val!5
+  T@U!val!29 -> T@T!val!6
+  T@U!val!3 -> T@T!val!4
+  T@U!val!30 -> T@T!val!5
+  T@U!val!31 -> T@T!val!5
+  T@U!val!32 -> T@T!val!5
+  T@U!val!33 -> T@T!val!5
+  T@U!val!34 -> T@T!val!5
+  T@U!val!35 -> T@T!val!5
+  T@U!val!36 -> T@T!val!5
+  T@U!val!37 -> T@T!val!5
+  T@U!val!38 -> T@T!val!6
+  T@U!val!39 -> T@T!val!9
+  T@U!val!4 -> T@T!val!4
+  T@U!val!40 -> T@T!val!5
+  T@U!val!41 -> T@T!val!6
+  T@U!val!42 -> T@T!val!9
+  T@U!val!43 -> T@T!val!5
+  T@U!val!44 -> T@T!val!6
+  T@U!val!45 -> T@T!val!5
+  T@U!val!46 -> T@T!val!4
+  T@U!val!47 -> T@T!val!15
+  T@U!val!48 -> T@T!val!4
+  T@U!val!49 -> T@T!val!12
+  T@U!val!5 -> T@T!val!5
+  T@U!val!50 -> T@T!val!4
+  T@U!val!51 -> T@T!val!4
+  T@U!val!52 -> T@T!val!13
+  T@U!val!53 -> T@T!val!4
+  T@U!val!54 -> T@T!val!17
+  T@U!val!55 -> T@T!val!17
+  T@U!val!56 -> T@T!val!17
+  T@U!val!57 -> T@T!val!17
+  T@U!val!58 -> T@T!val!15
+  T@U!val!59 -> T@T!val!17
+  T@U!val!6 -> T@T!val!5
+  T@U!val!60 -> T@T!val!17
+  T@U!val!61 -> T@T!val!17
+  T@U!val!62 -> T@T!val!15
+  T@U!val!63 -> T@T!val!17
+  T@U!val!64 -> T@T!val!17
+  T@U!val!65 -> T@T!val!17
+  T@U!val!66 -> T@T!val!17
+  T@U!val!67 -> T@T!val!17
+  T@U!val!68 -> T@T!val!15
+  T@U!val!69 -> T@T!val!17
+  T@U!val!7 -> T@T!val!5
+  T@U!val!70 -> T@T!val!17
+  T@U!val!71 -> T@T!val!17
+  T@U!val!72 -> T@T!val!17
+  T@U!val!73 -> T@T!val!17
+  T@U!val!74 -> T@T!val!15
+  T@U!val!75 -> T@T!val!17
+  T@U!val!76 -> T@T!val!17
+  T@U!val!77 -> T@T!val!17
+  T@U!val!78 -> T@T!val!17
+  T@U!val!79 -> T@T!val!15
+  T@U!val!8 -> T@T!val!5
+  T@U!val!80 -> T@T!val!17
+  T@U!val!81 -> T@T!val!17
+  T@U!val!82 -> T@T!val!17
+  T@U!val!83 -> T@T!val!17
+  T@U!val!84 -> T@T!val!17
+  T@U!val!85 -> T@T!val!17
+  T@U!val!86 -> T@T!val!4
+  T@U!val!87 -> T@T!val!18
+  T@U!val!88 -> T@T!val!10
+  T@U!val!9 -> T@T!val!5
+  T@U!val!90 -> T@T!val!17
+  T@U!val!91 -> T@T!val!17
+  T@U!val!92 -> T@T!val!17
+  T@U!val!93 -> T@T!val!20
+  T@U!val!95 -> T@T!val!10
+  else -> T@T!val!17
+}
+U_2_int -> {
+  10374 -> 10374
+  9297 -> 9297
+  else -> 9297
+}
+*** STATE <initial>
+  ##a#1_0 -> **##a#1_0
+  ##a#2_0 -> **##a#2_0
+  ##a#3_0 -> **##a#3_0
+  ##a#4_0 -> **##a#4_0
+  $_Frame -> **$_Frame
+  $_reverifyPost -> **$_reverifyPost
+  $Heap -> T@U!val!58
+  $rhs##1_0 -> T@U!val!82
+  $rhs##2_0 -> T@U!val!83
+  $rhs##3_0 -> T@U!val!84
+  $rhs##4_0 -> T@U!val!85
+  $Tick -> **$Tick
+  a##1_0 -> **a##1_0
+  a##2_0 -> **a##2_0
+  a##3_0 -> **a##3_0
+  a##4_0 -> **a##4_0
+  a#0 -> T@U!val!55
+  acc##1_0 -> **acc##1_0
+  acc##2_0 -> **acc##2_0
+  acc##3_0 -> **acc##3_0
+  acc##4_0 -> **acc##4_0
+  acc#0 -> T@U!val!56
+  acc_v#1_0 -> **acc_v#1_0
+  b##1_0 -> **b##1_0
+  b##2_0 -> **b##2_0
+  b##3_0 -> **b##3_0
+  b##4_0 -> **b##4_0
+  b#0 -> T@U!val!90
+  r#0 -> T@U!val!81
+  vacc#2_0 -> **vacc#2_0
+  vacc#3_0 -> **vacc#3_0
+  vacc#4_0 -> **vacc#4_0
+*** END_STATE
+*** STATE d:\Chris\Documents\GitHub\prototyping-testing\dafny\test.dfy(40,0): initial state
+  $_Frame -> T@U!val!87
+*** END_STATE
+*** END_MODEL
