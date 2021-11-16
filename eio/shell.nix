@@ -4,6 +4,7 @@ pkgs.mkShell {
   buildInputs = with pkgs; [
     opam
     pkgconfig
+    curl
   ];
   shellHook = ''
     export OPAMROOT=$PWD/.opam-root
