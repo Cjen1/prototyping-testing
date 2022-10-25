@@ -1,0 +1,5 @@
+(executable
+ (public_name state_effect)
+ (name main)
+ (libraries state_effect)
+ )
