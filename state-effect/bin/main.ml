@@ -23,24 +23,32 @@ let main () =
   fail "exn";
   send (C "foobar")
 
+  (*
 exception Discontinued
+*)
 
 let run f =
+  let ms = ref [] in
   match_with f () {
-    retc = (fun msgs -> msgs);
-    exnc = (function 
-      | Discontinued -> fun msgs -> msgs
-      | e -> raise e );
-    effc = fun (type b) (e : b Effect.t) ->
+    retc = (fun () -> !ms);
+    exnc = raise (*function
+      | Discontinued -> !ms
+      | e -> raise e*);
+    effc = (fun (type b) (e : b Effect.t) ->
       match e with
-      | Send m -> Some ( fun (k : (unit, msg list -> msg list) continuation) ->
-          fun x -> continue k x ())
-      | Fail m -> Some ( fun (k : (unit, msg list -> msg list) continuation) ->
-          (Printf.printf "Failed with %s\n" m; fun x -> discontinue k Discontinued ())
-      )
+      | Send m -> Some ( fun (k : (b, msg list) continuation) -> 
+          ms := m :: !ms;
+          continue k ())
+      | Fail _m -> Some ( fun _k -> 
+          (*
+          discontinue k Discontinued |> ignore;
+          *)
+          !ms)
       | _ -> None
-  } []
+    );
+  }
 
 let () = 
+  Printf.printf "\n";
   let msgs = run main in
   List.iter (fun m -> Printf.printf "Received: \"%s\"\n" @@ msg_to_str m) (List.rev msgs)
