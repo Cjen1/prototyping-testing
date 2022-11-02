@@ -1,5 +1,6 @@
 (executable
  (public_name state_effect)
  (name main)
- (libraries state_effect)
+ (libraries state_effect base core core_unix.command_unix core_bench)
+ (preprocess (pps ppx_jane))
  )
