@@ -1,5 +1,5 @@
 (executable
  (name eio_bench)
  (libraries eio eio_main eio_linux cmdliner base core core_unix.command_unix core_bench)
- (preprocess (pps ppx_jane))
+ (preprocess (pps ppx_jane ppx_cstruct))
  )
