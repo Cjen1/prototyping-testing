@@ -1,0 +1,3 @@
+_build
+flake.lock
+.direnv
