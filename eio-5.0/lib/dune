@@ -1,0 +1,5 @@
+(library
+ (name eio_rpc)
+ (libraries eio eio_main eio_linux cmdliner base core )
+ (preprocess (pps ppx_jane ppx_cstruct))
+ )

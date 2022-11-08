@@ -1,6 +1,7 @@
 let () = print_endline ""
 
 open! Core
+open! Eio_rpc
 
 let traceln = Eio.traceln
 
@@ -8,53 +9,18 @@ module Switch = Eio.Switch
 module Net = Eio.Net
 module Flow = Eio.Flow
 
-module LineProtocol = struct
-  open! Eio.Buf_read
-  open! Eio.Buf_read.Syntax
-
-  type packet_header = Cstruct.t
-
-  [%%cstruct
-  type packet_header = { id : uint32_t; length : uint16_t } [@@big_endian]]
-
-  let header : packet_header parser =
-    let+ b = take sizeof_packet_header in
-    Cstruct.of_string b
-
-  type packet = { id : int32; payload : Cstruct.t }
-
-  let packet : packet parser =
-    let* header = header in
-    let* payload =
-      let+ s = take (get_packet_header_length header) in
-      Cstruct.of_string s
-    in
-    return { payload; id = get_packet_header_id header }
-
-  let write_packet p w =
-    let open Eio.Buf_write in
-    let header = Cstruct.create_unsafe sizeof_packet_header in
-    (* TODO test using built in serialisers *)
-    set_packet_header_id header p.id;
-    set_packet_header_length header p.payload.len;
-    schedule_cstruct w header;
-    schedule_cstruct w p.payload
-end
-
 module Server = struct
-  let main socket : unit =
-    Switch.run @@ fun sw ->
+  let main ~sw socket : unit =
     let rec loop () =
       let callback flow addr =
         traceln "Accepted connection from %a" Eio.Net.Sockaddr.pp addr;
-        let buf_read = Eio.Buf_read.of_flow ~max_size:1_000_000 flow in
-        Eio.Buf_write.with_flow flow (fun writer ->
+        Rpc.Connection.with_connection flow (fun c ->
             let rec loop () =
-              if Eio.Buf_read.at_end_of_input buf_read then
+              if Rpc.Connection.is_closed c then
                 traceln "Finished connection %a" Eio.Net.Sockaddr.pp addr
               else
-                let packet = LineProtocol.packet buf_read in
-                LineProtocol.write_packet packet writer;
+                let pkt = Rpc.Connection.recv c in
+                Rpc.Connection.send c pkt;
                 loop ()
             in
             loop ())
@@ -72,80 +38,97 @@ module Server = struct
     traceln "Listening on 127.0.0.1:%d" port;
     Switch.run (fun sw ->
         let socket = Eio.Net.listen ~sw net addr ~backlog:5 in
-        main socket)
+        main ~sw socket)
+end
+
+module MBar = struct
+  type t = {
+    limit : int;
+    mutable current : int;
+    mtx : Eio.Mutex.t;
+    cond : Eio.Condition.t;
+  }
+
+  let create n =
+    {
+      limit = n;
+      current = 0;
+      mtx = Eio.Mutex.create ();
+      cond = Eio.Condition.create ();
+    }
+
+  let signal t =
+    Eio.Mutex.lock t.mtx;
+    t.current <- t.current + 1;
+    if t.current >= t.limit then Eio.Condition.broadcast t.cond;
+    Eio.Mutex.unlock t.mtx
+
+  let await t =
+    Eio.Mutex.lock t.mtx;
+    while t.current < t.limit do
+      Eio.Condition.await t.cond t.mtx
+    done;
+    Eio.Mutex.unlock t.mtx
 end
 
 module Client = struct
-  let main ?(concurrency = 1) (socket : #Flow.two_way) n clock : unit =
-    let sem = Eio.Semaphore.make concurrency in
-    let send_times = Array.create ~len:n None in
-    let sender () =
-      Eio.Buf_write.with_flow socket (fun writer ->
-          let rec loop n =
-            match n with
-            | 0 -> ()
-            | _ ->
-                Eio.Semaphore.acquire sem;
-                let packet =
-                  LineProtocol.
-                    {
-                      id = Int32.of_int_exn n;
-                      payload = Cstruct.of_string (Fmt.str "Payload %d" n);
-                    }
-                in
-                let idx = n - 1 in
-                assert (Array.get send_times idx |> Option.is_none);
-                Array.set send_times idx @@ Some (Eio.Time.now clock);
-                LineProtocol.write_packet packet writer;
-                loop (n - 1)
-          in
-          loop n)
-    in
-    let recv_times = Array.create ~len:n None in
-    let receiver () =
-      let open Eio.Buf_read in
-      let buf_read = of_flow ~max_size:1_000_000 socket in
-      let rec loop acc =
-        if Int.(acc = n) || at_end_of_input buf_read then acc
-        else
-          let packet = LineProtocol.packet buf_read in
-          let idx = Int32.to_int_exn packet.id - 1 in
-          assert (Array.get recv_times idx |> Option.is_none);
-          Array.set recv_times idx (Some (Eio.Time.now clock));
-          Eio.Semaphore.release sem;
-          loop (acc + 1)
-      in
-      let received_packets = loop 0 in
-      traceln "received %d packets" received_packets
-    in
-    Eio.Fiber.both sender receiver;
+  let process txs rxs =
     let start =
-      send_times |> Array.filter_opt
+      txs |> Array.filter_opt
       |> Array.min_elt ~compare:Float.compare
       |> Option.value_exn
     in
     let stop =
-      recv_times |> Array.filter_opt
+      rxs |> Array.filter_opt
       |> Array.max_elt ~compare:Float.compare
       |> Option.value_exn
     in
     let delay_times =
-      Array.zip_exn send_times recv_times
+      Array.zip_exn txs rxs
       |> Array.filter_map ~f:(function
            | Some tx, Some rx -> Some Float.(rx - tx)
            | _ -> None)
     in
+    Array.sort delay_times ~compare:Float.compare;
+    let n = Array.length txs in
     traceln "Completed test";
     traceln "Rate = %.2f req/s" Float.(of_int n / (stop - start));
+    let to_ms f = Float.(f * 1000.) in
     let mean_lat =
-      Float.(Array.sum (module Float) delay_times ~f:Fn.id / of_int n)
+      to_ms @@ Float.(Array.sum (module Float) delay_times ~f:Fn.id / of_int n)
     in
-    let delta_arr =
-      Array.map delay_times
-        ~f:Float.(fun lat -> (lat - mean_lat) * (lat - mean_lat) / of_int n)
+    let p000 = to_ms @@ Array.get delay_times 0 in
+    let p050 = to_ms @@ Array.get delay_times Int.(n / 2) in
+    let p099 = to_ms @@ Array.get delay_times Int.(99 * (n / 100)) in
+    let p100 = to_ms @@ Array.get delay_times (n - 1) in
+    traceln "Latency [0:%.3f, 50:%.3f, 99:%.3f, 100:%.3f, mean:%.3f]" p000 p050
+      p099 p100 mean_lat
+
+  let main ~sw ?(concurrency = 1) (socket : #Flow.two_way) n clock : unit =
+    Rpc.Connection.with_connection socket @@ fun c ->
+    let rpc_s = Rpc.RpcService.create ~sw c in
+    let send_times = Array.create ~len:n None in
+    let recv_times = Array.create ~len:n None in
+    let open Eio in
+    let sem = Semaphore.make concurrency in
+    let mbar = MBar.create n in
+    let rec fork_sender idx =
+      if idx = n then ()
+      else (
+        Eio.Fiber.fork ~sw (fun () ->
+            Semaphore.acquire sem;
+            Array.set send_times idx @@ Some (Time.now clock);
+            Rpc.RpcService.issue rpc_s
+              (Cstruct.of_string @@ Fmt.str "Payload %d" n)
+            |> Promise.await |> ignore;
+            Array.set recv_times idx @@ Some (Time.now clock);
+            Semaphore.release sem;
+            MBar.signal mbar);
+        fork_sender (idx + 1))
     in
-    let sd = Float.sqrt @@ Array.sum (module Float) delta_arr ~f:Fn.id in
-    Float.(traceln "Latency ~N(%.3f %.3f) ms" (mean_lat * 1000.) (sd * 1000.))
+    fork_sender 0;
+    MBar.await mbar;
+    process send_times recv_times
 
   let run n port concurrency : unit =
     Eio_main.run @@ fun env ->
@@ -155,23 +138,20 @@ module Client = struct
     [%message (n : int) (port : int)] |> print_s;
     Switch.run @@ fun sw ->
     let socket = Net.connect ~sw net addr in
-    main ~concurrency socket n clock;
+    main ~sw ~concurrency socket n clock;
+    traceln "completed test";
     Net.close socket
 end
 
 let () =
   let open Cmdliner in
-  let port_t =
-    Arg.(required & pos 0 (some int) None & info ~docv:"PORT" [])
-  in
+  let port_t = Arg.(required & pos 0 (some int) None & info ~docv:"PORT" []) in
   let server_t = Term.(const Server.run $ port_t) in
   let n_t =
-    Arg.(
-      required & pos 1 (some int) None & info ~docv:"ITERATIONS" [])
+    Arg.(required & pos 1 (some int) None & info ~docv:"ITERATIONS" [])
   in
   let concurrency_t =
-    Arg.(
-      required & pos 2 (some int) None & info ~docv:"CONCURRENCY" [])
+    Arg.(required & pos 2 (some int) None & info ~docv:"CONCURRENCY" [])
   in
   let client_t = Term.(const Client.run $ n_t $ port_t $ concurrency_t) in
   let info_i =
