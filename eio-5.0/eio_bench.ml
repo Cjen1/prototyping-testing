@@ -162,16 +162,16 @@ end
 let () =
   let open Cmdliner in
   let port_t =
-    Arg.(required & pos 0 (some int) None & info ~docv:"Port number" [])
+    Arg.(required & pos 0 (some int) None & info ~docv:"PORT" [])
   in
   let server_t = Term.(const Server.run $ port_t) in
   let n_t =
     Arg.(
-      required & pos 1 (some int) None & info ~docv:"number of iterations" [])
+      required & pos 1 (some int) None & info ~docv:"ITERATIONS" [])
   in
   let concurrency_t =
     Arg.(
-      required & pos 2 (some int) None & info ~docv:"internal concurrency" [])
+      required & pos 2 (some int) None & info ~docv:"CONCURRENCY" [])
   in
   let client_t = Term.(const Client.run $ n_t $ port_t $ concurrency_t) in
   let info_i =
