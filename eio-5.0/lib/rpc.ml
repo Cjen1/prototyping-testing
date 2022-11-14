@@ -33,31 +33,6 @@ module LineProtocol = struct
     schedule_cstruct w p.payload
 end
 
-module Connection = struct
-  let max_buf = 1024
-
-  type t = { mutable enqueued : int; r : Buf_read.t; w : Buf_write.t }
-
-  let with_connection (flow : #Eio.Flow.two_way) f =
-    Buf_write.with_flow flow (fun w ->
-        let t =
-          { enqueued = 0; r = Buf_read.of_flow ~max_size:1_000_000 flow; w }
-        in
-        f t)
-
-  let is_closed t = Buf_read.at_end_of_input t.r || Buf_write.is_closed t.w
-
-  let send t (p : LineProtocol.packet) =
-    if t.enqueued < max_buf then ()
-    else (
-      t.enqueued <- 0;
-      Buf_write.flush t.w);
-    t.enqueued <- t.enqueued + 2;
-    LineProtocol.write_packet p t.w
-
-  let recv t = LineProtocol.read_packet t.r
-end
-
 module UniqueId32 () = struct
   open Core
   include Int32
@@ -74,35 +49,125 @@ module UniqueId32 () = struct
   let create () = race_free_create_loop current succ
 end
 
-module RpcService = struct
+module Rpc = struct
   open Core
   module UId = UniqueId32 ()
   module ITbl = Hashtbl.Make (UId)
 
-  type t = { conn : Connection.t; fulfillers : Cstruct.t Promise.u ITbl.t }
+  module ManBufWrite = struct
+    let read_source_buffer t fn =
+      let iovecs = Buf_write.await_batch t in
+      Buf_write.shift t (fn iovecs)
 
-  let handler t =
+    let read_into t buf =
+      let iovecs = Buf_write.await_batch t in
+      let n, _iovecs = Cstruct.fillv ~src:iovecs ~dst:buf in
+      Buf_write.shift t n;
+      n
+
+    let as_flow t =
+      object
+        inherit Flow.source
+
+        method! read_methods =
+          [ Flow.Read_source_buffer (read_source_buffer t) ]
+
+        method read_into = read_into t
+      end
+
+    let of_flow ~sw ?(initial_size = 0x1000) flow =
+      let w = Buf_write.create ~sw initial_size in
+      Fiber.fork ~sw (fun () -> Flow.copy (as_flow w) flow);
+      w
+  end
+
+  let max_buf = 1024
+
+  type t = {
+    r : Buf_read.t;
+    w : Buf_write.t;
+    mutable enqueued : int;
+    mutable state : [ `Closed | `Open ];
+    fulfillers : Cstruct.t Promise.u ITbl.t;
+  }
+
+  let send t (pkt : LineProtocol.packet) =
+    if t.enqueued >= max_buf then (
+      t.enqueued <- 0;
+      Buf_write.flush t.w);
+    t.enqueued <- t.enqueued + 2;
+    LineProtocol.write_packet pkt t.w
+
+  let close t =
+    match t.state with
+    | `Closed -> ()
+    | `Open ->
+        t.state <- `Closed;
+        Buf_write.close t.w
+
+  let recv t = LineProtocol.read_packet t.r
+
+  let handler t () =
     let rec loop () =
-      let pkt = Connection.recv t.conn in
-      let f = ITbl.find t.fulfillers pkt.id in
+      let pkt = recv t in
+      let f = ITbl.find_and_remove t.fulfillers pkt.id in
       match f with
       | None -> raise_s [%message "no matching id" (pkt.id : int32)]
       | Some f ->
           Promise.resolve f pkt.payload;
           loop ()
     in
-    loop
+    loop ()
 
-  let create ~sw conn =
-    let t = { conn; fulfillers = ITbl.create () } in
-    Fiber.fork ~sw (handler t);
+  let create ~kind ~sw ?(initial_size = 0x1000) (flow : #Eio.Flow.two_way) =
+    let t_p, t_u = Promise.create () in
+    Fiber.fork_sub ~sw
+      ~on_error:(fun e ->
+        close (Promise.await t_p);
+        raise e)
+      (fun sw ->
+        let w = ManBufWrite.of_flow ~initial_size ~sw flow in
+        let r = Buf_read.of_flow ~max_size:1_000_000 flow in
+        let t =
+          { r; w; enqueued = 0; fulfillers = ITbl.create (); state = `Open }
+        in
+        match kind with
+        | `Server -> Promise.resolve t_u t
+        | `Client ->
+            Fiber.fork_daemon ~sw (handler t);
+            Promise.resolve t_u t);
+    let t = Promise.await t_p in
     t
 
-  let issue t payload : Cstruct.t Promise.t =
-    let p, u = Promise.create () in
-    let id = UId.create () in
-    let pkt = LineProtocol.{ id; payload } in
-    ITbl.set t.fulfillers ~key:id ~data:u;
-    Connection.send t.conn pkt;
-    p
+  module Client = struct
+    type nonrec t = t
+
+    let connect ~sw ?(initial_size = 0x1000) (flow : #Eio.Flow.two_way) =
+      create ~kind:`Client ~sw ~initial_size flow
+
+    let issue t payload : Cstruct.t Promise.t =
+      let p, u = Promise.create () in
+      let id = UId.create () in
+      let pkt = LineProtocol.{ id; payload } in
+      ITbl.set t.fulfillers ~key:id ~data:u;
+      send t pkt;
+      p
+
+    let close = close
+  end
+
+  module Server = struct
+    type nonrec t = t
+
+    let create ~sw ?(initial_size = 0x1000) (flow : #Eio.Flow.two_way) =
+      create ~kind:`Server ~sw ~initial_size flow
+
+    let recv = recv
+    let send = send
+    let close = close
+
+    let is_closed t =
+      Buf_read.at_end_of_input t.r
+      || match t.state with `Closed -> true | _ -> false
+  end
 end

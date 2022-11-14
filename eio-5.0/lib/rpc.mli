@@ -4,18 +4,22 @@ module LineProtocol : sig
   type packet = { id : int32; payload : Cstruct.t }
 end
 
-module Connection : sig
-  type t
+module Rpc : sig
+  module Client : sig
+    type t
 
-  val with_connection : #Flow.two_way -> (t -> 'a) -> 'a
-  val is_closed : t -> bool
-  val send : t -> LineProtocol.packet -> unit
-  val recv : t -> LineProtocol.packet
-end
+    val connect : sw:Switch.t -> ?initial_size:int -> #Flow.two_way -> t
+    val issue : t -> Cstruct.t -> Cstruct.t Promise.t
+    val close : t -> unit
+  end
 
-module RpcService : sig
-  type t
+  module Server : sig
+    type t
+    val create : sw:Switch.t -> ?initial_size:int -> #Flow.two_way -> t
+    val close : t -> unit
 
-  val create : sw:Switch.t -> Connection.t -> t
-  val issue : t -> Cstruct.t -> Cstruct.t Promise.t
+    val recv : t -> LineProtocol.packet
+    val send : t -> LineProtocol.packet -> unit
+    val is_closed : t -> bool
+  end
 end

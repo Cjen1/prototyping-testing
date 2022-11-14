@@ -14,16 +14,17 @@ module Server = struct
     let rec loop () =
       let callback flow addr =
         traceln "Accepted connection from %a" Eio.Net.Sockaddr.pp addr;
-        Rpc.Connection.with_connection flow (fun c ->
-            let rec loop () =
-              if Rpc.Connection.is_closed c then
-                traceln "Finished connection %a" Eio.Net.Sockaddr.pp addr
-              else
-                let pkt = Rpc.Connection.recv c in
-                Rpc.Connection.send c pkt;
-                loop ()
-            in
-            loop ())
+        let serv = Rpc.Rpc.Server.create ~sw flow in
+        let rec loop () =
+          if Rpc.Rpc.Server.is_closed serv then (
+            Rpc.Rpc.Server.close serv;
+            traceln "Finished connection %a" Eio.Net.Sockaddr.pp addr)
+          else
+            let pkt = Rpc.Rpc.Server.recv serv in
+            Rpc.Rpc.Server.send serv pkt;
+            loop ()
+        in
+        loop ()
       in
       let on_error (e : exn) = traceln "Failed with %a" Fmt.exn e in
       Eio.Net.accept_fork socket ~sw ~on_error callback;
@@ -105,8 +106,7 @@ module Client = struct
       p099 p100 mean_lat
 
   let main ~sw ?(concurrency = 1) (socket : #Flow.two_way) n clock : unit =
-    Rpc.Connection.with_connection socket @@ fun c ->
-    let rpc_s = Rpc.RpcService.create ~sw c in
+    let service = Rpc.Rpc.Client.connect ~sw socket in
     let send_times = Array.create ~len:n None in
     let recv_times = Array.create ~len:n None in
     let open Eio in
@@ -118,7 +118,7 @@ module Client = struct
         Eio.Fiber.fork ~sw (fun () ->
             Semaphore.acquire sem;
             Array.set send_times idx @@ Some (Time.now clock);
-            Rpc.RpcService.issue rpc_s
+            Rpc.Rpc.Client.issue service
               (Cstruct.of_string @@ Fmt.str "Payload %d" n)
             |> Promise.await |> ignore;
             Array.set recv_times idx @@ Some (Time.now clock);
@@ -128,6 +128,7 @@ module Client = struct
     in
     fork_sender 0;
     MBar.await mbar;
+    Rpc.Rpc.Client.close service;
     process send_times recv_times
 
   let run n port concurrency : unit =
@@ -139,8 +140,7 @@ module Client = struct
     Switch.run @@ fun sw ->
     let socket = Net.connect ~sw net addr in
     main ~sw ~concurrency socket n clock;
-    traceln "completed test";
-    Net.close socket
+    traceln "completed test"
 end
 
 let () =
