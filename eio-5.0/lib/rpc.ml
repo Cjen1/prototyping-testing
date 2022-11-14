@@ -36,20 +36,12 @@ end
 module Connection = struct
   let max_buf = 1024
 
-  type t = {
-    mutable enqueued : int;
-    r : Buf_read.t;
-    w : Buf_write.t;
-  }
+  type t = { mutable enqueued : int; r : Buf_read.t; w : Buf_write.t }
 
   let with_connection (flow : #Eio.Flow.two_way) f =
     Buf_write.with_flow flow (fun w ->
         let t =
-          {
-            enqueued = 0;
-            r = Buf_read.of_flow ~max_size:1_000_000 flow;
-            w;
-          }
+          { enqueued = 0; r = Buf_read.of_flow ~max_size:1_000_000 flow; w }
         in
         f t)
 
@@ -71,13 +63,12 @@ module UniqueId32 () = struct
   include Int32
 
   let rec race_free_create_loop cell make =
-  let x = !cell in
-  let new_x = make x in
-  if !cell = x
-  then (
-    cell := new_x;
-    x)
-  else race_free_create_loop cell make
+    let x = !cell in
+    let new_x = make x in
+    if !cell = x then (
+      cell := new_x;
+      x)
+    else race_free_create_loop cell make
 
   let current = ref zero
   let create () = race_free_create_loop current succ
@@ -110,7 +101,7 @@ module RpcService = struct
   let issue t payload : Cstruct.t Promise.t =
     let p, u = Promise.create () in
     let id = UId.create () in
-    let pkt = LineProtocol.{id = id; payload} in
+    let pkt = LineProtocol.{ id; payload } in
     ITbl.set t.fulfillers ~key:id ~data:u;
     Connection.send t.conn pkt;
     p
