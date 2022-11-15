@@ -1,4 +1,4 @@
-let () = print_endline ""
+let _ = print_endline ""
 
 open! Core
 open! Eio_rpc
@@ -136,7 +136,7 @@ module Client = struct
     let net = Eio.Stdenv.net env in
     let clock = Eio.Stdenv.clock env in
     let addr = `Tcp (Net.Ipaddr.V4.loopback, port) in
-    [%message (n : int) (port : int)] |> print_s;
+    traceln "n: %d, port: %d" n port;
     Switch.run @@ fun sw ->
     let socket = Net.connect ~sw net addr in
     main ~sw ~concurrency socket n clock;
