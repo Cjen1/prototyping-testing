@@ -14,14 +14,14 @@ module Server = struct
     let rec loop () =
       let callback flow addr =
         traceln "Accepted connection from %a" Eio.Net.Sockaddr.pp addr;
-        let serv = Rpc.Rpc.Server.create ~sw flow in
+        let serv = Rpc.Server.create ~sw flow in
         let rec loop () =
-          if Rpc.Rpc.Server.is_closed serv then (
-            Rpc.Rpc.Server.close serv;
+          if Rpc.Server.is_closed serv then (
+            Rpc.Server.close serv;
             traceln "Finished connection %a" Eio.Net.Sockaddr.pp addr)
           else
-            let pkt = Rpc.Rpc.Server.recv serv in
-            Rpc.Rpc.Server.send serv pkt;
+            let pkt = Rpc.Server.recv serv in
+            Rpc.Server.send serv pkt;
             loop ()
         in
         loop ()
@@ -106,7 +106,7 @@ module Client = struct
       p099 p100 mean_lat
 
   let main ~sw ?(concurrency = 1) (socket : #Flow.two_way) n clock : unit =
-    let service = Rpc.Rpc.Client.connect ~sw socket in
+    let service = Rpc.Client.connect ~sw socket in
     let send_times = Array.create ~len:n None in
     let recv_times = Array.create ~len:n None in
     let open Eio in
@@ -118,7 +118,7 @@ module Client = struct
         Eio.Fiber.fork ~sw (fun () ->
             Semaphore.acquire sem;
             Array.set send_times idx @@ Some (Time.now clock);
-            Rpc.Rpc.Client.issue service
+            Rpc.Client.issue service
               (Cstruct.of_string @@ Fmt.str "Payload %d" n)
             |> Promise.await |> ignore;
             Array.set recv_times idx @@ Some (Time.now clock);
@@ -128,7 +128,7 @@ module Client = struct
     in
     fork_sender 0;
     MBar.await mbar;
-    Rpc.Rpc.Client.close service;
+    Rpc.Client.close service;
     process send_times recv_times
 
   let run n port concurrency : unit =
