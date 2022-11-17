@@ -17,85 +17,87 @@ module UniqueId32 () = struct
 end
 
 module UId = UniqueId32 ()
-module ITbl = Hashtbl.Make (UId)
-
-module ManBufWrite = struct
-  let read_source_buffer t fn =
-    let iovecs = Buf_write.await_batch t in
-    Buf_write.shift t (fn iovecs)
-
-  let read_into t buf =
-    let iovecs = Buf_write.await_batch t in
-    let n, _iovecs = Cstruct.fillv ~src:iovecs ~dst:buf in
-    Buf_write.shift t n;
-    n
-
-  let as_flow t =
-    object
-      inherit Flow.source
-      method! read_methods = [ Flow.Read_source_buffer (read_source_buffer t) ]
-      method read_into = read_into t
-    end
-
-  let of_flow ~sw ?(initial_size = 0x1000) flow =
-    let w = Buf_write.create ~sw initial_size in
-    Fiber.fork ~sw (fun () -> Flow.copy (as_flow w) flow);
-    w
-end
+module ITbl = Core.Hashtbl.Make (UId)
 
 module Writer = struct
-  type t = { mutable buf : Cstruct.t Queue.t; max_size : int ; flow : Flow.sink}
+  type t = {
+    buf : Cstruct.t Queue.t;
+    max_size : int;
+    flow : Flow.sink;
+    clock : Eio.Time.clock;
+    mutable last_flush : float;
+  }
 
-  let take_n t n =
+  let take_n t target =
     let rec loop n acc =
-    if n = 0 then acc else if Queue.is_empty t.buf then acc else
-      loop (n-1) (Queue.pop t.buf :: acc)
-    in loop n []
+      if n = 0 then (acc, 0)
+      else if Queue.is_empty t.buf then (acc, target - n)
+      else loop (n - 1) (Queue.pop t.buf :: acc)
+    in
+    loop target []
 
-  let flush t = 
-    let iovecs = take_n t t.max_size in
-    Flow.write t.flow iovecs
+  let flush t =
+    t.last_flush <- Time.now t.clock;
+    let iovecs, len = take_n t t.max_size in
+    if len > 0 then (
+      Flow.write t.flow iovecs;
+    )
 
-  let space_available _n = true
+  let space_available t n = Queue.length t.buf + n < t.max_size
 
-  let write t c =
-    if not @@ space_available 1 then
-      flush t;
-    Queue.add c t.buf
+  let write t cs =
+    if not @@ space_available t (List.length cs) then (
+      flush t);
+    let rec loop = function
+      | [] -> ()
+      | c :: cs ->
+          Queue.add c t.buf;
+          loop cs
+    in
+    loop cs
+
+  let create ~sw ?(max_size = 1024) ?(max_time_to_flush = 0.01) flow clock =
+    let t =
+      {
+        buf = Queue.create ();
+        max_size;
+        flow;
+        clock;
+        last_flush = Time.now clock;
+      }
+    in
+    traceln "Created new writer : {last_flush=%f}" t.last_flush;
+    Fiber.fork_daemon ~sw (fun () ->
+        while true do
+          let sleep_target = Float.add t.last_flush max_time_to_flush in
+          let sleep_duration = Float.sub sleep_target (Time.now clock) in
+          if sleep_duration > 0. then Time.sleep clock sleep_duration;
+          let current = Time.now clock in
+          let duration_since_last_flush = Float.sub current t.last_flush in
+          if duration_since_last_flush >= max_time_to_flush then flush t
+        done;
+        assert false);
+    Switch.on_release sw (fun () -> flush t);
+    t
 end
-
-let max_buf = 512
 
 type t = {
   r : Buf_read.t;
-  w : Buf_write.t;
-  mutable enqueued : int;
-  mutable state : [ `Closed | `Open ];
+  w : Writer.t;
   fulfillers : Cstruct.t Promise.u ITbl.t;
-  mutex : Eio.Mutex.t;
 }
 
 let send t (pkt : Line_protocol.packet) =
-  Eio.Mutex.lock t.mutex;
-  let delta = 2 in
-  if t.enqueued + delta > max_buf then (
-    t.enqueued <- 0;
-    Buf_write.flush t.w);
-  t.enqueued <- t.enqueued + delta;
-  Eio.Mutex.unlock t.mutex;
-  Line_protocol.write_packet pkt t.w
+  Writer.write t.w (Line_protocol.to_cstructs pkt)
 
-let close t =
-  match t.state with
-  | `Closed -> ()
-  | `Open ->
-      t.state <- `Closed;
-      Buf_write.close t.w
+let recv t = 
+  let r = Line_protocol.read_packet t.r in
+  r
 
-let recv t = Line_protocol.read_packet t.r
 
 let handler t () =
   let rec loop () =
+    let open Core in
     let pkt = recv t in
     let f = ITbl.find_and_remove t.fulfillers pkt.id in
     match f with
@@ -106,25 +108,12 @@ let handler t () =
   in
   loop ()
 
-let create ~kind ~sw ?(initial_size = 0x1000) (flow : #Eio.Flow.two_way) =
+let create ~kind ~sw (flow : #Eio.Flow.two_way) (clock : #Eio.Time.clock) =
   let t_p, t_u = Promise.create () in
-  Fiber.fork_sub ~sw
-    ~on_error:(fun e ->
-      close (Promise.await t_p);
-      raise e)
-    (fun sw ->
-      let w = ManBufWrite.of_flow ~initial_size ~sw flow in
+  Fiber.fork ~sw (fun () ->
+      let w = Writer.create ~sw (flow :> Flow.sink) (clock :> Time.clock) in
       let r = Buf_read.of_flow ~max_size:1_000_000 flow in
-      let t =
-        {
-          r;
-          w;
-          enqueued = 0;
-          fulfillers = ITbl.create ();
-          state = `Open;
-          mutex = Eio.Mutex.create ();
-        }
-      in
+      let t = { r; w; fulfillers = ITbl.create () } in
       match kind with
       | `Server -> Promise.resolve t_u t
       | `Client ->
@@ -136,8 +125,8 @@ let create ~kind ~sw ?(initial_size = 0x1000) (flow : #Eio.Flow.two_way) =
 module Client = struct
   type nonrec t = t
 
-  let connect ~sw ?(initial_size = 0x1000) (flow : #Eio.Flow.two_way) =
-    create ~kind:`Client ~sw ~initial_size flow
+  let connect ~sw (flow : #Eio.Flow.two_way) (clock : #Eio.Time.clock) =
+    create ~kind:`Client ~sw flow clock
 
   let issue t payload : Cstruct.t Promise.t =
     let p, u = Promise.create () in
@@ -146,21 +135,15 @@ module Client = struct
     ITbl.set t.fulfillers ~key:id ~data:u;
     send t pkt;
     p
-
-  let close = close
 end
 
 module Server = struct
   type nonrec t = t
 
-  let create ~sw ?(initial_size = 0x1000) (flow : #Eio.Flow.two_way) =
-    create ~kind:`Server ~sw ~initial_size flow
+  let create ~sw (flow : #Eio.Flow.two_way) (clock : #Eio.Time.clock) =
+    create ~kind:`Server ~sw flow clock
 
   let recv = recv
   let send = send
-  let close = close
-
-  let is_closed t =
-    Buf_read.at_end_of_input t.r
-    || match t.state with `Closed -> true | _ -> false
+  let is_closed t = Buf_read.at_end_of_input t.r
 end

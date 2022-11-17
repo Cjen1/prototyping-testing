@@ -10,14 +10,13 @@ module Net = Eio.Net
 module Flow = Eio.Flow
 
 module Server = struct
-  let main ~sw socket : unit =
+  let main ~sw socket clock : unit =
     let rec loop () =
       let callback flow addr =
         traceln "Accepted connection from %a" Eio.Net.Sockaddr.pp addr;
-        let serv = Rpc.Server.create ~sw flow in
+        let serv = Rpc.Server.create ~sw flow clock in
         let rec loop () =
           if Rpc.Server.is_closed serv then (
-            Rpc.Server.close serv;
             traceln "Finished connection %a" Eio.Net.Sockaddr.pp addr)
           else
             let pkt = Rpc.Server.recv serv in
@@ -34,12 +33,13 @@ module Server = struct
 
   let run port : unit =
     Eio_main.run @@ fun env ->
+    let clock = Eio.Stdenv.clock env in
     let net = Eio.Stdenv.net env in
     let addr = `Tcp (Eio.Net.Ipaddr.V4.loopback, port) in
     traceln "Listening on 127.0.0.1:%d" port;
     Switch.run (fun sw ->
         let socket = Eio.Net.listen ~sw net addr ~backlog:5 in
-        main ~sw socket)
+        main ~sw socket clock)
 end
 
 module MBar = struct
@@ -106,7 +106,7 @@ module Client = struct
       p099 p100 mean_lat
 
   let main ~sw ?(concurrency = 1) (socket : #Flow.two_way) n clock : unit =
-    let service = Rpc.Client.connect ~sw socket in
+    let service = Rpc.Client.connect ~sw socket clock in
     let send_times = Array.create ~len:n None in
     let recv_times = Array.create ~len:n None in
     let open Eio in
@@ -128,7 +128,6 @@ module Client = struct
     in
     fork_sender 0;
     MBar.await mbar;
-    Rpc.Client.close service;
     process send_times recv_times
 
   let run n port concurrency : unit =

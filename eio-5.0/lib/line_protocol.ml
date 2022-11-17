@@ -28,3 +28,10 @@ let write_packet p w =
   set_packet_header_length header p.payload.len;
   schedule_cstruct w header;
   schedule_cstruct w p.payload
+
+let to_cstructs p =
+  let header = Cstruct.create_unsafe sizeof_packet_header in
+  set_packet_header_id header p.id;
+  set_packet_header_length header p.payload.len;
+  [p.payload;header]
+
