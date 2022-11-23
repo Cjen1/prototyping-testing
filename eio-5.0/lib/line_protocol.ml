@@ -22,9 +22,16 @@ let read_packet : packet parser =
   return { payload; id = get_packet_header_id header }
 
 let write_packet p w =
-  let open Buf_write in
-  let header = Cstruct.create_unsafe sizeof_packet_header in
-  set_packet_header_id header p.id;
-  set_packet_header_length header p.payload.len;
-  schedule_cstruct w header;
-  schedule_cstruct w p.payload
+  match `BufWrite with
+  | `Cstruct ->
+      let open Buf_write in
+      let header = Cstruct.create_unsafe sizeof_packet_header in
+      set_packet_header_id header p.id;
+      set_packet_header_length header p.payload.len;
+      schedule_cstruct w header;
+      schedule_cstruct w p.payload
+  | `BufWrite ->
+      let open Buf_write in
+      BE.uint32 w p.id;
+      BE.uint16 w p.payload.len;
+      cstruct w p.payload

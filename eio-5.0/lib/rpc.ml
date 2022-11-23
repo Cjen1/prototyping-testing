@@ -1,3 +1,4 @@
+open! Core
 open! Eio
 
 module UniqueId32 () = struct
@@ -43,46 +44,14 @@ module ManBufWrite = struct
     w
 end
 
-module Writer = struct
-  type t = { mutable buf : Cstruct.t Queue.t; max_size : int ; flow : Flow.sink}
-
-  let take_n t n =
-    let rec loop n acc =
-    if n = 0 then acc else if Queue.is_empty t.buf then acc else
-      loop (n-1) (Queue.pop t.buf :: acc)
-    in loop n []
-
-  let flush t = 
-    let iovecs = take_n t t.max_size in
-    Flow.write t.flow iovecs
-
-  let space_available _n = true
-
-  let write t c =
-    if not @@ space_available 1 then
-      flush t;
-    Queue.add c t.buf
-end
-
-let max_buf = 512
-
 type t = {
   r : Buf_read.t;
   w : Buf_write.t;
-  mutable enqueued : int;
   mutable state : [ `Closed | `Open ];
   fulfillers : Cstruct.t Promise.u ITbl.t;
-  mutex : Eio.Mutex.t;
 }
 
 let send t (pkt : Line_protocol.packet) =
-  Eio.Mutex.lock t.mutex;
-  let delta = 2 in
-  if t.enqueued + delta > max_buf then (
-    t.enqueued <- 0;
-    Buf_write.flush t.w);
-  t.enqueued <- t.enqueued + delta;
-  Eio.Mutex.unlock t.mutex;
   Line_protocol.write_packet pkt t.w
 
 let close t =
@@ -119,10 +88,8 @@ let create ~kind ~sw ?(initial_size = 0x1000) (flow : #Eio.Flow.two_way) =
         {
           r;
           w;
-          enqueued = 0;
           fulfillers = ITbl.create ();
           state = `Open;
-          mutex = Eio.Mutex.create ();
         }
       in
       match kind with
