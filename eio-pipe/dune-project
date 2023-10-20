@@ -1,0 +1,16 @@
+(lang dune 2.7)
+(name eiopipe)
+
+(generate_opam_files true)
+
+(package
+  (name eiopipe)
+  (synopsis "")
+  (depends 
+    (ocaml (= 5.1.0))
+    cmdliner
+    iter
+    (eio (>= 0.11))
+    eio_main
+    eio_linux
+    ))

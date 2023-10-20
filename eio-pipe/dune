@@ -1,0 +1,4 @@
+(executable
+  (name eiopipe)
+  (libraries cmdliner eio eio_main eio_linux)
+  )
