@@ -33,7 +33,6 @@
           (pkgs.lib.getAttrs (builtins.attrNames query) scope);
       in
       {
-        defaultPackage = scope.eiopipe;
         devShell = pkgs.mkShell {
           inputsFrom = [scope.eiopipe];
           buildInputs = devPackages ++ [
