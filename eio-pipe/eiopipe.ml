@@ -3,6 +3,7 @@ open Eio.Std
 let run n =
   let ( let* ) k f = k f in
   let* env = Eio_main.run in
+  traceln "Running %s" env#backend_id;
   let* sw = Switch.run in
   let rec daemon () =
     Eio.Time.sleep env#clock 1. ;
