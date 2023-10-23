@@ -36,7 +36,7 @@
         devShell = pkgs.mkShell {
           inputsFrom = [scope.eiopipe];
           buildInputs = devPackages ++ [
-            pkgs.python312
+            pkgs.python310
             pkgs.linuxPackages_latest.perf
           ];
         };

@@ -11,15 +11,19 @@ let run n =
   in
   traceln "start" ;
   Fiber.fork_daemon ~sw daemon ;
-  let* stdout = Eio.Buf_write.with_flow ~initial_size:4096 env#stdout in
-  let write buf = Eio.Buf_write.uint8 buf 1 in
+  let* stdout = Eio.Buf_write.with_flow ~initial_size:8192 env#stdout in
+  let write_size = ref 0 in
+  let write buf = Eio.Buf_write.uint8 buf 1 ; incr write_size in
   let rec aux n =
     if n = 0 then ()
     else (
       write stdout ;
       aux (n - 1) )
   in
-  aux n ; Eio.Buf_write.flush stdout
+  aux n ;
+  Eio.Buf_write.flush stdout ;
+  Eio.traceln "Writing %d bytes" !write_size ;
+  traceln "done"
 
 open Cmdliner
 
